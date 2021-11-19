@@ -3,6 +3,6 @@
 pkgs.mkShell {
   name = "go-env";
   buildInputs = [
-    pkgs.go
+    pkgs.nim
   ];
 }
