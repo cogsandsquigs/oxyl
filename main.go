@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/ipratt-code/oxyl/std"
 )
 
 func main() {
@@ -19,6 +21,6 @@ func main() {
 		text = strings.Replace(text, "\n", "", -1)
 
 		fmt.Println("=> " + text)
-
 	}
+	print(std.ADD)
 }
