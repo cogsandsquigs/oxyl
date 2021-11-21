@@ -1,76 +1,45 @@
 package std
 
-import (
-	"fmt"
-)
-
-type Type interface {
-	String() string
-	IsOperable(Operator, Type) (Type, error)
+type Type struct {
+	name       string
+	cmpoptypes map[Operator][]string
 }
 
-type Int struct {
+// Name returns the name of the type
+func (t *Type) Name() string {
+	return t.name
 }
 
-func (t Int) String() string {
-	return "Int"
-}
-
-func (t Int) IsOperable(op Operator, r Type) (Type, error) {
-	if r.String() != "Float" && r.String() != "Int" {
-		return nil, fmt.Errorf("types " + t.String() + " and " + r.String() + " are not compatible")
+// CmpOpType stands for COmpatible OPerator and TYPE. Checks to see if type and operator can be used together.
+// The assumption here is that `t` is on the left side, which sets the precedent for the operation.
+func (t *Type) CmpOpType(op Operator, typ Type) bool {
+	typeNameList, ok := t.cmpoptypes[op]
+	if !ok {
+		return ok
 	}
-
-	switch op {
-	case ADD:
-	case SUB:
-	case MUL:
-	case DIV:
-		if r.String() == "Float" {
-			return Float{}, nil
-		} else {
-			return Int{}, nil
+	for _, typeName := range typeNameList {
+		if typeName == t.name {
+			return true
 		}
-
-	default:
-		return nil, fmt.Errorf("operator " + string(op) + " is not compatible with types " + t.String() + " and " + r.String())
-	}
-	return nil, fmt.Errorf("this error should not occur")
-}
-
-type Float struct {
-}
-
-func (t Float) String() string {
-	return "Float"
-}
-
-func (t Float) IsOperable(op Operator, r Type) (Type, error) {
-	if r.String() != "Float" && r.String() != "Int" {
-		return nil, fmt.Errorf("types " + t.String() + " and " + r.String() + " are not compatible")
 	}
 
-	switch op {
-	case ADD:
-	case SUB:
-	case MUL:
-	case DIV:
-		if r.String() == "Float" {
-			return Float{}, nil
-		} else {
-			return Int{}, nil
-		}
-
-	default:
-		return nil, fmt.Errorf("operator " + string(op) + " is not compatible with types " + t.String() + " and " + r.String())
-	}
-
-	return nil, fmt.Errorf("this error should not occur")
+	return false
 }
 
-type Bool struct {
+// Int is the integer type
+var Int = Type{
+	name: "Int",
+	cmpoptypes: map[Operator][]string{
+		ADD: {"Int", "Float"},
+		SUB: {"Int", "Float"},
+	},
 }
 
-func (t Bool) String() string {
-	return "Bool"
+// Float is the floating point number type
+var Float = Type{
+	name: "Int",
+	cmpoptypes: map[Operator][]string{
+		ADD: {"Int", "Float"},
+		SUB: {"Int", "Float"},
+	},
 }
