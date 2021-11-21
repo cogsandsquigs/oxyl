@@ -2,6 +2,7 @@ package std
 
 import "fmt"
 
+// Type defines the structure for types in Oxyl
 type Type struct {
 	name        string
 	cmpoptypes  map[Operator][]string
