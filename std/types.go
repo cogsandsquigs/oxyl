@@ -44,7 +44,7 @@ func (t *Type) ExecuteOp(op Operator, l, r *Value) (interface{}, string, error) 
 }
 
 // Int is the integer type
-var Int = Type{
+var Int = &Type{
 	name: "Int",
 	cmpoptypes: map[Operator][]string{
 		ADD: {"Int", "Float"},
@@ -97,7 +97,7 @@ var Int = Type{
 }
 
 // Float is the floating point number type
-var Float = Type{
+var Float = &Type{
 	name: "Int",
 	cmpoptypes: map[Operator][]string{
 		ADD: {"Int", "Float"},
