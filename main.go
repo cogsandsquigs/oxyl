@@ -10,8 +10,10 @@ import (
 )
 
 func main() {
-	t := std.Int
-	println(t.Name())
+	v1 := std.NewValue(std.Int.Name(), int64(1))
+  v2 := std.NewValue(std.Float.Name(), float64(2))
+  v3, _ := std.Int.ExecuteOp("+", v1, v2)
+  fmt.Printf("Got value of %v with type of %s\n", v3.Value(), v3.Type())
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to the Oxyl REPL!")
