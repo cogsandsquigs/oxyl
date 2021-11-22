@@ -10,12 +10,12 @@ import (
 )
 
 func main() {
+	t := std.Int
+	println(t.Name())
+
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to the Oxyl REPL!")
 	fmt.Println("Please keep in mind this programming language is still under development!")
-
-	t := std.Type{}
-	print(t.Name())
 
 	for {
 		fmt.Print("~> ")
