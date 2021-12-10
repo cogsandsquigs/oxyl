@@ -11,7 +11,9 @@ import (
 
 func main() {
     i := std.NewIntType()
+    f := std.NewFloatType()
     fmt.Println(i.Name())
+    fmt.Println(f.Name())
     /*
 	v1 := std.NewValue(std.Int.Name(), int64(1))
     v2 := std.NewValue(std.Float.Name(), float64(2))

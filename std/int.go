@@ -16,8 +16,8 @@ func (t *Int) Name() string {
 
 func (t *Int) DefinedOperators(op Operator) ([]Type, error) {
     switch op {
-    case ADD:
-        return []Type{NewIntType()}, nil
+    case ADD, SUB, MUL, DIV:
+        return []Type{NewIntType(), NewFloatType()}, nil
     default:
         return nil, fmt.Errorf("operator %s is not defined for type Int", op)
     }
