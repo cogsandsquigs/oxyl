@@ -5,6 +5,13 @@ type Value struct {
     v interface{}
 }
 
+func NewValue(t Type, v interface{}) *Value {
+    return &Value{
+        t: t,
+        v: v,
+    }
+}
+
 func (v *Value) Type() Type {
     return v.t
 }

@@ -23,6 +23,6 @@ func (t *Float) DefinedOperators(op Operator) ([]Type, error) {
     }
 } 
 
-func (t *Float) ExecuteOperators(op Operator) (func(l, r Value) Value, error) {
+func (t *Float) ExecuteOperators(op Operator) (func(l, r *Value) (*Value, error), error) {
     return nil, nil
 }

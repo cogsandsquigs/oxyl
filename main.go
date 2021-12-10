@@ -11,15 +11,15 @@ import (
 
 func main() {
     i := std.NewIntType()
-    f := std.NewFloatType()
-    fmt.Println(i.Name())
-    fmt.Println(f.Name())
+    v1 := std.NewValue(i, 1)
+    fmt.Printf("value 1: %s, %v\n", v1.Type().Name(), v1.Value())
+    v2 := std.NewValue(i, 2)
+    fmt.Printf("value 2: %s, %v\n", v2.Type().Name(), v2.Value())
+    addf, _ := i.ExecuteOperators(std.ADD)
+    v3, _ := addf(v1, v2)
+    fmt.Printf("adding value 1 and value 2: %s, %v\n", v3.Type().Name(), v3.Value())
+    
     /*
-	v1 := std.NewValue(std.Int.Name(), int64(1))
-    v2 := std.NewValue(std.Float.Name(), float64(2))
-    v3, _ := std.Int.ExecuteOp("+", v1, v2)
-    fmt.Printf("Got value of %v with type of %s\n", v3.Value(), v3.Type())
-
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to the Oxyl REPL!")
 	fmt.Println("Please keep in mind this programming language is still under development!")
