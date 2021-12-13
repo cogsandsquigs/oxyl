@@ -17,9 +17,9 @@ func (t *None) DefinedOperators(op Operator) ([]Type, error) {
 	}
 }
 
-func (t *None) ExecuteOperators(op Operator) (func(l, r *Value) (*Value, error), error) {
+func (t *None) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
 	switch op {
 	default:
-		return func(l, r *Value) (*Value, error) { return nil, nil }, fmt.Errorf("operator %s is not defined for type None", op)
+		return func(l, r *Value) (*Value, error) { return nil, nil }
 	}
 }
