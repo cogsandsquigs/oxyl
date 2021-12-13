@@ -1,10 +1,10 @@
 package main
 
 import (
-	//"bufio"
+	"bufio"
 	"fmt"
-	//"os"
-	//"strings"
+	"os"
+	"strings"
 
 	"github.com/ipratt-code/oxyl/std"
 )
@@ -20,18 +20,17 @@ func main() {
 	v3, _ := addf(v1, v2)
 	fmt.Printf("adding value 1 and value 2: %s, %v\n", v3.Type().Name(), v3.Value())
 
-	/*
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Println("Welcome to the Oxyl REPL!")
-		fmt.Println("Please keep in mind this programming language is still under development!")
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Welcome to the Oxyl REPL!")
+	fmt.Println("Please keep in mind this programming language is still under development!")
 
-		for {
-			fmt.Print("~> ")
-			text, _ := reader.ReadString('\n')
-			// convert CRLF to LF
-			text = strings.Replace(text, "\n", "", -1)
+	for {
+		fmt.Print("~> ")
+		text, _ := reader.ReadString('\n')
+		// convert CRLF to LF
+		text = strings.Replace(text, "\n", "", -1)
 
-			fmt.Println("=> " + text)
-		}
-	*/
+		fmt.Println(text)
+	}
+
 }
