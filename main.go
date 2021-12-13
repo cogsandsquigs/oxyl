@@ -29,6 +29,7 @@ func main() {
 		// convert CRLF to LF
 		text = strings.Replace(text, "\n", "", -1)
 
+        // do stuff with the text
 		fmt.Println(text)
 	}
 
