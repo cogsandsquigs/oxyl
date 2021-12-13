@@ -6,10 +6,6 @@ import (
 
 type Float struct{}
 
-func NewFloatType() Type {
-	return &Float{}
-}
-
 func (t *Float) Name() string {
 	return "Float"
 }
@@ -17,7 +13,7 @@ func (t *Float) Name() string {
 func (t *Float) DefinedOperators(op Operator) ([]Type, error) {
 	switch op {
 	case ADD, SUB, MUL, DIV:
-		return []Type{NewFloatType(), NewFloatType()}, nil
+		return []Type{&Float{}, &Int{}}, nil
 	default:
 		return nil, fmt.Errorf("operator %s is not defined for type Float", op)
 	}
@@ -41,9 +37,9 @@ func (t *Float) ExecuteOperators(op Operator) (func(l, r *Value) (*Value, error)
 func floataddv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(NewFloatType(), l.v.(float64)+float64(r.v.(int))), nil
+		return NewValue(&Float{}, l.v.(float64)+float64(r.v.(int))), nil
 	case *Float:
-		return NewValue(NewFloatType(), l.v.(float64)+r.v.(float64)), nil
+		return NewValue(&Float{}, l.v.(float64)+r.v.(float64)), nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
@@ -52,9 +48,9 @@ func floataddv(l, r *Value) (*Value, error) {
 func floatsubv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(NewFloatType(), l.v.(float64)-float64(r.v.(int))), nil
+		return NewValue(&Float{}, l.v.(float64)-float64(r.v.(int))), nil
 	case *Float:
-		return NewValue(NewFloatType(), l.v.(float64)-r.v.(float64)), nil
+		return NewValue(&Float{}, l.v.(float64)-r.v.(float64)), nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
@@ -63,9 +59,9 @@ func floatsubv(l, r *Value) (*Value, error) {
 func floatmulv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(NewFloatType(), l.v.(float64)*float64(r.v.(int))), nil
+		return NewValue(&Float{}, l.v.(float64)*float64(r.v.(int))), nil
 	case *Float:
-		return NewValue(NewFloatType(), l.v.(float64)*r.v.(float64)), nil
+		return NewValue(&Float{}, l.v.(float64)*r.v.(float64)), nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
@@ -74,9 +70,9 @@ func floatmulv(l, r *Value) (*Value, error) {
 func floatdivv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(NewFloatType(), l.v.(float64)/float64(r.v.(int))), nil
+		return NewValue(&Float{}, l.v.(float64)/float64(r.v.(int))), nil
 	case *Float:
-		return NewValue(NewFloatType(), l.v.(float64)/r.v.(float64)), nil
+		return NewValue(&Float{}, l.v.(float64)/r.v.(float64)), nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}

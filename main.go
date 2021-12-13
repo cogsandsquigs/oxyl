@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	i := std.NewIntType()
-	f := std.NewFloatType()
+	i := &std.Int{}
+	f := &std.Float{}
 	v1 := std.NewValue(f, 1.2)
 	fmt.Printf("value 1: %s, %v\n", v1.Type().Name(), v1.Value())
 	v2 := std.NewValue(i, 2)
