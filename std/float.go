@@ -19,18 +19,18 @@ func (t *Float) DefinedOperators(op Operator) ([]Type, error) {
 	}
 }
 
-func (t *Float) ExecuteOperators(op Operator) (func(l, r *Value) (*Value, error), error) {
+func (t *Float) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
 	switch op {
 	case ADD:
-		return floataddv, nil
+		return floataddv
 	case SUB:
-		return floatsubv, nil
+		return floatsubv
 	case MUL:
-		return floatmulv, nil
+		return floatmulv
 	case DIV:
-		return floatdivv, nil
+		return floatdivv
 	default:
-		return func(l, r *Value) (*Value, error) { return nil, nil }, fmt.Errorf("operator %s is not defined for type Int", op)
+		return func(l, r *Value) (*Value, error) { return nil, nil }
 	}
 }
 
