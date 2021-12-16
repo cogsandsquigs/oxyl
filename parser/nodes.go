@@ -1,33 +1,32 @@
 package parser
 
 import (
-    "fmt"
-    
-    . "github.com/ipratt-code/oxyl/std"
+	"fmt"
+
+	. "github.com/ipratt-code/oxyl/std/types"
 )
 
-type Node interface{
-    Type() Type
-    Print(indent string)
+type Node interface {
+	Type() Type
+	Print(indent string)
 }
 
 type LiteralNode struct {
-    val *Value
+	val *Value
 }
 
 func NewLiteralNode(value *Value) *LiteralNode {
-    return &LiteralNode{
-        val: value,
-    }
+	return &LiteralNode{
+		val: value,
+	}
 }
 
 func (n *LiteralNode) Type() Type {
-    return n.val.Type()
+	return n.val.Type()
 }
 
 func (n *LiteralNode) Print(indent string) {
-    fmt.Printf("%sliteral node:\n", indent)
-    fmt.Printf("%s\ttype: %v\n", indent, n.val.Type().Name())
-    fmt.Printf("%s\tvalue: %v\n", indent, n.val.Value())
+	fmt.Printf("%sliteral node:\n", indent)
+	fmt.Printf("%s\ttype: %v\n", indent, n.val.Type().Name())
+	fmt.Printf("%s\tvalue: %v\n", indent, n.val.Value())
 }
-

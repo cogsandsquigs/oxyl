@@ -1,4 +1,4 @@
-package std
+package operators
 
 // Token defines the type for Oxyl tokens like (, ), {, and }
 type Token string

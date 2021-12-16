@@ -1,4 +1,8 @@
-package std
+package types
+
+import (
+	. "github.com/ipratt-code/oxyl/std/operators"
+)
 
 type Type interface {
 	Name() string

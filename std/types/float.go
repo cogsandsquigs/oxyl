@@ -1,7 +1,9 @@
-package std
+package types
 
 import (
 	"fmt"
+
+	. "github.com/ipratt-code/oxyl/std/operators"
 )
 
 type Float struct{}
