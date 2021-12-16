@@ -7,9 +7,11 @@ import (
 	"strings"
 
 	"github.com/ipratt-code/oxyl/std"
+    "github.com/ipratt-code/oxyl/parser"
 )
 
 func main() {
+    /*
 	i := &std.Int{}
 	f := &std.Float{}
 	v1 := std.NewValue(f, 1.2)
@@ -18,12 +20,16 @@ func main() {
 	fmt.Printf("value 2: %s, %v\n", v2.Type().Name(), v2.Value())
 	v3, _ := f.ExecuteOperators(std.ADD)(v1, v2)
 	fmt.Printf("adding value 1 and value 2: %s, %v\n", v3.Type().Name(), v3.Value())
+    */
 
-	reader := bufio.NewReader(os.Stdin)
+    n := parser.NewLiteralNode(std.NewValue(&std.Int{}, 1))
+    n.Print("")
+
+    reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to the Oxyl REPL!")
 	fmt.Println("Please keep in mind this programming language is still under development!")
-
-	for {
+	
+    for {
 		fmt.Print("~> ")
 		text, _ := reader.ReadString('\n')
 		// convert CRLF to LF
