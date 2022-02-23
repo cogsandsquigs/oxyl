@@ -3,7 +3,7 @@ package parser
 import (
 	"fmt"
 
-	. "github.com/ipratt-code/oxyl/std/types"
+	. "oxyl/std/types"
 )
 
 type Node interface {

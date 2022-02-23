@@ -1,7 +1,8 @@
 package types
 
 import (
-	. "github.com/ipratt-code/oxyl/std/operators"
+	. "oxyl/std/operators"
+	"oxyl/std/traits"
 )
 
 type Type interface {
@@ -14,7 +15,7 @@ type Type interface {
 	ExecuteOperators(op Operator) func(l, r *Value) (*Value, error)
 
 	// IsTraitDefined checks if a trait is defined, returns true if it is, otherwise false.
-	IsTraitDefined(trait string, methods []string) bool
+	IsTraitDefined(trait traits.Trait) bool
 
 	// IsMethodDefined returns true if the method is defined,
 	// and false otherwise.

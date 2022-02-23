@@ -1,13 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-
-	"github.com/ipratt-code/oxyl/parser"
-	"github.com/ipratt-code/oxyl/std/types"
+	"oxyl/parser"
+	"oxyl/std/types"
 )
 
 func main() {
@@ -24,19 +19,19 @@ func main() {
 
 	n := parser.NewLiteralNode(types.NewValue(&types.Int{}, 1))
 	n.Print("")
+	/*
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("Welcome to the Oxyl REPL!")
+		fmt.Println("Please keep in mind this programming language is still under development!")
 
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Welcome to the Oxyl REPL!")
-	fmt.Println("Please keep in mind this programming language is still under development!")
+		for {
+			fmt.Print("~> ")
+			text, _ := reader.ReadString('\n')
+			// convert CRLF to LF
+			text = strings.Replace(text, "\n", "", -1)
 
-	for {
-		fmt.Print("~> ")
-		text, _ := reader.ReadString('\n')
-		// convert CRLF to LF
-		text = strings.Replace(text, "\n", "", -1)
-
-		// do stuff with the text
-		fmt.Println(text)
-	}
-
+			// do stuff with the text
+			fmt.Println(text)
+		}
+	*/
 }

@@ -3,7 +3,8 @@ package types
 import (
 	"fmt"
 
-	. "github.com/ipratt-code/oxyl/std/operators"
+	. "oxyl/std/operators"
+	"oxyl/std/traits"
 )
 
 type Float struct{}
@@ -36,7 +37,7 @@ func (t *Float) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) 
 	}
 }
 
-func (t *Float) IsTraitDefined(trait string, methods []string) bool {
+func (t *Float) IsTraitDefined(trait traits.Trait) bool {
 	return false
 }
 

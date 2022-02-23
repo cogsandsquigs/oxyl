@@ -3,7 +3,8 @@ package types
 import (
 	"fmt"
 
-	. "github.com/ipratt-code/oxyl/std/operators"
+	. "oxyl/std/operators"
+	"oxyl/std/traits"
 )
 
 type None struct{}
@@ -24,4 +25,16 @@ func (t *None) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
 	default:
 		return func(l, r *Value) (*Value, error) { return nil, nil }
 	}
+}
+
+func (t *None) IsTraitDefined(trait traits.Trait) bool {
+	return false
+}
+
+func (t *None) IsMethodDefined(method string) bool {
+	return false
+}
+
+func (t *None) GetMethod(method string) func(in ...*Value) (*Value, error) {
+	return func(in ...*Value) (*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) }
 }
