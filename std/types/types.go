@@ -23,5 +23,5 @@ type Type interface {
 
 	// GetMethod takes in a method name and returns a function
 	// that corresponds to the method name which acts on the value
-	GetMethod(method string) func(in ...*Value) (*Value, error)
+	GetMethod(method string) *Method
 }

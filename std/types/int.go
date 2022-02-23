@@ -45,8 +45,11 @@ func (t *Int) IsMethodDefined(method string) bool {
 	return false
 }
 
-func (t *Int) GetMethod(method string) func(in ...*Value) (*Value, error) {
-	return func(in ...*Value) (*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) }
+func (t *Int) GetMethod(method string) *Method {
+  return &Method{
+    Name: "", 
+    Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
+  }
 }
 
 // funcs

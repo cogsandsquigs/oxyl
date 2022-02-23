@@ -35,6 +35,9 @@ func (t *None) IsMethodDefined(method string) bool {
 	return false
 }
 
-func (t *None) GetMethod(method string) func(in ...*Value) (*Value, error) {
-	return func(in ...*Value) (*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) }
+func (t *None) GetMethod(method string) *Method {
+	return &Method{
+    Name: "", 
+    Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
+  }
 }
