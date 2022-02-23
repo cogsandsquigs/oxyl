@@ -36,6 +36,19 @@ func (t *Float) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) 
 	}
 }
 
+func (t *Float) IsTraitDefined(trait string, methods []string) bool {
+	return false
+}
+
+func (t *Float) IsMethodDefined(method string) bool {
+	return false
+}
+
+func (t *Float) GetMethod(method string) func(in ...*Value) (*Value, error) {
+	return func(in ...*Value) (*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) }
+}
+
+// funcs
 func floataddv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:

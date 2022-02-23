@@ -36,6 +36,19 @@ func (t *Int) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
 	}
 }
 
+func (t *Int) IsTraitDefined(trait string, methods []string) bool {
+	return false
+}
+
+func (t *Int) IsMethodDefined(method string) bool {
+	return false
+}
+
+func (t *Int) GetMethod(method string) func(in ...*Value) (*Value, error) {
+	return func(in ...*Value) (*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) }
+}
+
+// funcs
 func intaddv(l, r *Value) (*Value, error) {
 	switch r.Type().(type) {
 	case *Int:
