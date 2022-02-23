@@ -22,18 +22,18 @@ func (t *Float) DefinedOperators(op Operator) ([]Type, error) {
 	}
 }
 
-func (t *Float) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
+func (t *Float) ExecuteOperators(op Operator) *Method {
 	switch op {
 	case ADD:
-		return floataddv
+		return &Method{Name:string(ADD), Func: floataddv}
 	case SUB:
-		return floatsubv
+		return &Method{Name:string(SUB), Func: floatsubv}
 	case MUL:
-		return floatmulv
+		return &Method{Name:string(MUL), Func: floatmulv}
 	case DIV:
-		return floatdivv
+		return &Method{Name:string(DIV), Func: floatdivv}
 	default:
-		return func(l, r *Value) (*Value, error) { return nil, nil }
+		return &Method{Name:"", Func:func([]*Value) ([]*Value, error) { return nil, fmt.Errorf("operator not defined") }}
 	}
 }
 
@@ -53,45 +53,69 @@ func (t *Float) GetMethod(method string) *Method {
 }
 
 // funcs
-func floataddv(l, r *Value) (*Value, error) {
+func floataddv(v []*Value) ([]*Value, error) {
+  if len(v) < 2 {
+    return nil, fmt.Errorf("not enough arguments")
+  }
+
+  r := v[0]
+  l := v[1]
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(&Float{}, l.v.(float64)+float64(r.v.(int))), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)+float64(r.v.(int)))}, nil
 	case *Float:
-		return NewValue(&Float{}, l.v.(float64)+r.v.(float64)), nil
+    return []*Value{NewValue(&Float{}, l.v.(float64)+r.v.(float64))}, nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
 }
 
-func floatsubv(l, r *Value) (*Value, error) {
+func floatsubv(v []*Value) ([]*Value, error) {
+  if len(v) < 2 {
+    return nil, fmt.Errorf("not enough arguments")
+  }
+
+  r := v[0]
+  l := v[1]
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(&Float{}, l.v.(float64)-float64(r.v.(int))), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)-float64(r.v.(int)))}, nil
 	case *Float:
-		return NewValue(&Float{}, l.v.(float64)-r.v.(float64)), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)-r.v.(float64))}, nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
 }
 
-func floatmulv(l, r *Value) (*Value, error) {
+func floatmulv(v []*Value) ([]*Value, error) {
+  if len(v) < 2 {
+    return nil, fmt.Errorf("not enough arguments")
+  }
+
+  r := v[0]
+  l := v[1]
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(&Float{}, l.v.(float64)*float64(r.v.(int))), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)*float64(r.v.(int)))}, nil
 	case *Float:
-		return NewValue(&Float{}, l.v.(float64)*r.v.(float64)), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)*r.v.(float64))}, nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}
 }
 
-func floatdivv(l, r *Value) (*Value, error) {
+func floatdivv(v []*Value) ([]*Value, error) {
+  if len(v) < 2 {
+    return nil, fmt.Errorf("not enough arguments")
+  }
+
+  r := v[0]
+  l := v[1]
 	switch r.Type().(type) {
 	case *Int:
-		return NewValue(&Float{}, l.v.(float64)/float64(r.v.(int))), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)/float64(r.v.(int)))}, nil
 	case *Float:
-		return NewValue(&Float{}, l.v.(float64)/r.v.(float64)), nil
+		return []*Value{NewValue(&Float{}, l.v.(float64)/r.v.(float64))}, nil
 	default:
 		return nil, fmt.Errorf("types %s and %s are not defined for operator +", l.t.Name(), r.t.Name())
 	}

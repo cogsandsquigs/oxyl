@@ -12,7 +12,7 @@ type Type interface {
 	DefinedOperators(op Operator) ([]Type, error)
 
 	// ExecuteOperators is ONLY be called AFTER type checking occurs
-	ExecuteOperators(op Operator) func(l, r *Value) (*Value, error)
+	ExecuteOperators(op Operator) *Method
 
 	// IsTraitDefined checks if a trait is defined, returns true if it is, otherwise false.
 	IsTraitDefined(trait traits.Trait) bool
