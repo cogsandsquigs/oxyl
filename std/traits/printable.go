@@ -1,3 +1,0 @@
-package traits
-
-const traits = ""

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	. "oxyl/std/operators"
-	"oxyl/std/traits"
 )
 
 type Int struct{}
@@ -25,19 +24,19 @@ func (t *Int) DefinedOperators(op Operator) ([]Type, error) {
 func (t *Int) ExecuteOperators(op Operator) *Method {
 	switch op {
 	case ADD:
-		return &Method{Name:string(ADD), Func: intaddv}
+		return &Method{Name: string(ADD), Func: intaddv}
 	case SUB:
-		return &Method{Name:string(SUB), Func: intsubv}
+		return &Method{Name: string(SUB), Func: intsubv}
 	case MUL:
-		return &Method{Name:string(MUL), Func: intmulv}
+		return &Method{Name: string(MUL), Func: intmulv}
 	case DIV:
-		return &Method{Name:string(DIV), Func: intdivv}
+		return &Method{Name: string(DIV), Func: intdivv}
 	default:
-		return &Method{Name:"", Func:func([]*Value) ([]*Value, error) { return nil, fmt.Errorf("operator not defined") }}
+		return &Method{Name: "", Func: func([]*Value) ([]*Value, error) { return nil, fmt.Errorf("operator not defined") }}
 	}
 }
 
-func (t *Int) IsTraitDefined(trait traits.Trait) bool {
+func (t *Int) IsTraitDefined(trait Trait) bool {
 	return false
 }
 
@@ -46,20 +45,20 @@ func (t *Int) IsMethodDefined(method string) bool {
 }
 
 func (t *Int) GetMethod(method string) *Method {
-  return &Method{
-    Name: "", 
-    Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
-  }
+	return &Method{
+		Name: "",
+		Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
+	}
 }
 
 // funcs
 func intaddv(v []*Value) ([]*Value, error) {
-  if len(v) < 2 {
-    return nil, fmt.Errorf("not enough arguments")
-  }
+	if len(v) < 2 {
+		return nil, fmt.Errorf("not enough arguments")
+	}
 
-  r := v[0]
-  l := v[1]
+	r := v[0]
+	l := v[1]
 	switch r.Type().(type) {
 	case *Int:
 		return []*Value{NewValue(&Int{}, l.v.(int)+r.v.(int))}, nil
@@ -71,12 +70,12 @@ func intaddv(v []*Value) ([]*Value, error) {
 }
 
 func intsubv(v []*Value) ([]*Value, error) {
-  if len(v) < 2 {
-    return nil, fmt.Errorf("not enough arguments")
-  }
+	if len(v) < 2 {
+		return nil, fmt.Errorf("not enough arguments")
+	}
 
-  r := v[0]
-  l := v[1]
+	r := v[0]
+	l := v[1]
 	switch r.Type().(type) {
 	case *Int:
 		return []*Value{NewValue(&Int{}, l.v.(int)-r.v.(int))}, nil
@@ -88,12 +87,12 @@ func intsubv(v []*Value) ([]*Value, error) {
 }
 
 func intmulv(v []*Value) ([]*Value, error) {
-  if len(v) < 2 {
-    return nil, fmt.Errorf("not enough arguments")
-  }
+	if len(v) < 2 {
+		return nil, fmt.Errorf("not enough arguments")
+	}
 
-  r := v[0]
-  l := v[1]
+	r := v[0]
+	l := v[1]
 	switch r.Type().(type) {
 	case *Int:
 		return []*Value{NewValue(&Int{}, l.v.(int)*r.v.(int))}, nil
@@ -105,12 +104,12 @@ func intmulv(v []*Value) ([]*Value, error) {
 }
 
 func intdivv(v []*Value) ([]*Value, error) {
-  if len(v) < 2 {
-    return nil, fmt.Errorf("not enough arguments")
-  }
+	if len(v) < 2 {
+		return nil, fmt.Errorf("not enough arguments")
+	}
 
-  r := v[0]
-  l := v[1]
+	r := v[0]
+	l := v[1]
 	switch r.Type().(type) {
 	case *Int:
 		return []*Value{NewValue(&Int{}, l.v.(int)/r.v.(int))}, nil

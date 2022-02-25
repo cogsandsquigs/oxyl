@@ -2,7 +2,6 @@ package types
 
 import (
 	. "oxyl/std/operators"
-	"oxyl/std/traits"
 )
 
 type Type interface {
@@ -15,7 +14,7 @@ type Type interface {
 	ExecuteOperators(op Operator) *Method
 
 	// IsTraitDefined checks if a trait is defined, returns true if it is, otherwise false.
-	IsTraitDefined(trait traits.Trait) bool
+	IsTraitDefined(trait Trait) bool
 
 	// IsMethodDefined returns true if the method is defined,
 	// and false otherwise.

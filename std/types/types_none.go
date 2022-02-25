@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	. "oxyl/std/operators"
-	"oxyl/std/traits"
 )
 
 type None struct{}
@@ -27,7 +26,7 @@ func (t *None) ExecuteOperators(op Operator) func(l, r *Value) (*Value, error) {
 	}
 }
 
-func (t *None) IsTraitDefined(trait traits.Trait) bool {
+func (t *None) IsTraitDefined(trait Trait) bool {
 	return false
 }
 
@@ -37,7 +36,7 @@ func (t *None) IsMethodDefined(method string) bool {
 
 func (t *None) GetMethod(method string) *Method {
 	return &Method{
-    Name: "", 
-    Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
-  }
+		Name: "",
+		Func: func(in []*Value) ([]*Value, error) { return nil, fmt.Errorf("method %s is not defined", method) },
+	}
 }
