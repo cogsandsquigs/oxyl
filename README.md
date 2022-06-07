@@ -1,3 +1,3 @@
 # oxyl
 
-A programming language i guess
+Something i guess
