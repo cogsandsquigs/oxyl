@@ -229,6 +229,7 @@ fn render_home<'a>() -> Paragraph<'a> {
     home
 }
 
+// renders the cards, returns two widgets to render
 fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
     let cards = Block::default()
         .borders(Borders::ALL)
