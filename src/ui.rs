@@ -1,10 +1,7 @@
-use chrono::prelude::*;
 use crossterm::{
     event::{self, Event as CEvent, KeyCode},
     terminal::{disable_raw_mode, enable_raw_mode},
 };
-use rand::{distributions::Alphanumeric, prelude::*};
-use std::fs;
 use std::io;
 use std::sync::mpsc;
 use std::thread;
@@ -20,7 +17,12 @@ use tui::{
     Terminal,
 };
 
-use crate::{card::Pet, db::DB_PATH};
+use crate::db::{
+	create_db,
+	read_db,
+	add_random_card_to_db,
+	remove_card_at_index,
+};
 
 enum Event<I> {
     Input(I),
@@ -30,19 +32,19 @@ enum Event<I> {
 #[derive(Copy, Clone, Debug)]
 enum MenuItem {
     Home,
-    Pets,
+    Cards,
 }
 
 impl From<MenuItem> for usize {
     fn from(input: MenuItem) -> usize {
         match input {
             MenuItem::Home => 0,
-            MenuItem::Pets => 1,
+            MenuItem::Cards => 1,
         }
     }
 }
 
-pub fn run() -> Result<(), Box<dyn std::error::Error>> {
+pub fn render() -> Result<(), Box<dyn std::error::Error>> {
     enable_raw_mode().expect("can run in raw mode");
 
     let (tx, rx) = mpsc::channel();
@@ -73,10 +75,10 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut terminal = Terminal::new(backend)?;
     terminal.clear()?;
 
-    let menu_titles = vec!["Home", "Pets", "Add", "Delete", "Quit"];
+    let menu_titles = vec!["Home", "Cards", "Add a card", "Quit"];
     let mut active_menu_item = MenuItem::Home;
-    let mut pet_list_state = ListState::default();
-    pet_list_state.select(Some(0));
+    let mut card_list_state = ListState::default();
+    card_list_state.select(Some(0));
 
     loop {
         terminal.draw(|rect| {
@@ -106,6 +108,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                         .border_type(BorderType::Plain),
                 );
 
+			// the menu element
             let menu = menu_titles
                 .iter()
                 .map(|t| {
@@ -114,7 +117,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                         Span::styled(
                             first,
                             Style::default()
-                                .fg(Color::Yellow)
+                                .fg(Color::Blue)
                                 .add_modifier(Modifier::UNDERLINED),
                         ),
                         Span::styled(rest, Style::default().fg(Color::White)),
@@ -126,22 +129,22 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                 .select(active_menu_item.into())
                 .block(Block::default().title("Menu").borders(Borders::ALL))
                 .style(Style::default().fg(Color::White))
-                .highlight_style(Style::default().fg(Color::Yellow))
+                .highlight_style(Style::default().fg(Color::Blue))
                 .divider(Span::raw("|"));
 
             rect.render_widget(tabs, chunks[0]);
             match active_menu_item {
                 MenuItem::Home => rect.render_widget(render_home(), chunks[1]),
-                MenuItem::Pets => {
-                    let pets_chunks = Layout::default()
+                MenuItem::Cards => {
+                    let cards_chunks = Layout::default()
                         .direction(Direction::Horizontal)
                         .constraints(
                             [Constraint::Percentage(20), Constraint::Percentage(80)].as_ref(),
                         )
                         .split(chunks[1]);
-                    let (left, right) = render_pets(&pet_list_state);
-                    rect.render_stateful_widget(left, pets_chunks[0], &mut pet_list_state);
-                    rect.render_widget(right, pets_chunks[1]);
+                    let (left, right) = render_cards(&card_list_state);
+                    rect.render_stateful_widget(left, cards_chunks[0], &mut card_list_state);
+                    rect.render_widget(right, cards_chunks[1]);
                 }
             }
             rect.render_widget(footer, chunks[2]);
@@ -155,30 +158,30 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                     break;
                 }
                 KeyCode::Char('h') => active_menu_item = MenuItem::Home,
-                KeyCode::Char('p') => active_menu_item = MenuItem::Pets,
+                KeyCode::Char('c') => active_menu_item = MenuItem::Cards,
                 KeyCode::Char('a') => {
-                    add_random_pet_to_db().expect("can add new random pet");
+                    add_random_card_to_db().expect("can add new random card");
                 }
                 KeyCode::Char('d') => {
-                    remove_pet_at_index(&mut pet_list_state).expect("can remove pet");
+                    remove_card_at_index(&mut card_list_state).expect("can remove card");
                 }
                 KeyCode::Down => {
-                    if let Some(selected) = pet_list_state.selected() {
-                        let amount_pets = read_db().expect("can fetch pet list").len();
-                        if selected >= amount_pets - 1 {
-                            pet_list_state.select(Some(0));
+                    if let Some(selected) = card_list_state.selected() {
+                        let amount_cards = read_db().expect("can fetch card list").len();
+                        if selected >= amount_cards - 1 {
+                            card_list_state.select(Some(0));
                         } else {
-                            pet_list_state.select(Some(selected + 1));
+                            card_list_state.select(Some(selected + 1));
                         }
                     }
                 }
                 KeyCode::Up => {
-                    if let Some(selected) = pet_list_state.selected() {
-                        let amount_pets = read_db().expect("can fetch pet list").len();
+                    if let Some(selected) = card_list_state.selected() {
+                        let amount_cards = read_db().expect("can fetch card list").len();
                         if selected > 0 {
-                            pet_list_state.select(Some(selected - 1));
+                            card_list_state.select(Some(selected - 1));
                         } else {
-                            pet_list_state.select(Some(amount_pets - 1));
+                            card_list_state.select(Some(amount_cards - 1));
                         }
                     }
                 }
@@ -198,11 +201,11 @@ fn render_home<'a>() -> Paragraph<'a> {
         Spans::from(vec![Span::raw("to")]),
         Spans::from(vec![Span::raw("")]),
         Spans::from(vec![Span::styled(
-            "pet-CLI",
+            "card-CLI",
             Style::default().fg(Color::LightBlue),
         )]),
         Spans::from(vec![Span::raw("")]),
-        Spans::from(vec![Span::raw("Press 'p' to access pets, 'a' to add random new pets and 'd' to delete the currently selected pet.")]),
+        Spans::from(vec![Span::raw("Press 'p' to access Cards, 'a' to add random new Cards and 'd' to delete the currently selected card.")]),
     ])
     .alignment(Alignment::Center)
     .block(
@@ -215,123 +218,98 @@ fn render_home<'a>() -> Paragraph<'a> {
     home
 }
 
-fn render_pets<'a>(pet_list_state: &ListState) -> (List<'a>, Table<'a>) {
-    let pets = Block::default()
+fn render_cards<'a>(card_list_state: &ListState) -> (List<'a>, Table<'a>) {
+    let cards = Block::default()
         .borders(Borders::ALL)
         .style(Style::default().fg(Color::White))
-        .title("Pets")
+        .title("Cards")
         .border_type(BorderType::Plain);
 
-    let pet_list = read_db().expect("can fetch pet list");
-    let items: Vec<_> = pet_list
+	// gets all the cards into a list
+    let card_list = read_db().unwrap_or_else(|_| {
+		create_db().expect("could not create a new db");
+		read_db().expect("read db")
+	});
+    let items: Vec<_> = card_list
         .iter()
-        .map(|pet| {
+        .map(|card| {
             ListItem::new(Spans::from(vec![Span::styled(
-                pet.name.clone(),
+                card.name.clone(),
                 Style::default(),
             )]))
         })
         .collect();
 
-    let selected_pet = pet_list
-        .get(
-            pet_list_state
-                .selected()
-                .expect("there is always a selected pet"),
-        )
-        .expect("exists")
-        .clone();
-
-    let list = List::new(items).block(pets).highlight_style(
+	// gets all the cards
+	let list = List::new(items).block(cards).highlight_style(
         Style::default()
-            .bg(Color::Yellow)
+            .bg(Color::Blue)
             .fg(Color::Black)
             .add_modifier(Modifier::BOLD),
     );
+	
+	// gets the selected card if there are
+	// cards present in the db
 
-    let pet_detail = Table::new(vec![Row::new(vec![
-        Cell::from(Span::raw(selected_pet.id.to_string())),
-        Cell::from(Span::raw(selected_pet.name)),
-        Cell::from(Span::raw(selected_pet.category)),
-        Cell::from(Span::raw(selected_pet.age.to_string())),
-        Cell::from(Span::raw(selected_pet.created_at.to_string())),
-    ])])
-    .header(Row::new(vec![
-        Cell::from(Span::styled(
-            "ID",
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-        Cell::from(Span::styled(
-            "Name",
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-        Cell::from(Span::styled(
-            "Category",
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-        Cell::from(Span::styled(
-            "Age",
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-        Cell::from(Span::styled(
-            "Created At",
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-    ]))
-    .block(
-        Block::default()
-            .borders(Borders::ALL)
-            .style(Style::default().fg(Color::White))
-            .title("Detail")
-            .border_type(BorderType::Plain),
-    )
-    .widths(&[
-        Constraint::Percentage(5),
-        Constraint::Percentage(20),
-        Constraint::Percentage(20),
-        Constraint::Percentage(5),
-        Constraint::Percentage(20),
-    ]);
+	let mut display = Table::new(None);
+	
+	if card_list.len() != 0 || !card_list_state.selected().is_none() {
+		let selected_card = card_list
+		.get(
+			card_list_state
+				.selected()
+				.expect("there is always a selected card"),
+		)
+		.expect("no card exists")
+		.clone();
+	
+	    let card_detail = Table::new(vec![Row::new(vec![
+	        Cell::from(Span::raw(selected_card.id.to_string())),
+	        Cell::from(Span::raw(selected_card.name)),
+	        Cell::from(Span::raw(selected_card.category)),
+	        Cell::from(Span::raw(selected_card.age.to_string())),
+	        Cell::from(Span::raw(selected_card.created_at.to_string())),
+	    ])])
+	    .header(Row::new(vec![
+	        Cell::from(Span::styled(
+	            "ID",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+	        Cell::from(Span::styled(
+	            "Name",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+	        Cell::from(Span::styled(
+	            "Category",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+	        Cell::from(Span::styled(
+	            "Age",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+	        Cell::from(Span::styled(
+	            "Created At",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+	    ]))
+	    .block(
+	        Block::default()
+	            .borders(Borders::ALL)
+	            .style(Style::default().fg(Color::White))
+	            .title("Detail")
+	            .border_type(BorderType::Plain),
+	    )
+	    .widths(&[
+	        Constraint::Percentage(5),
+	        Constraint::Percentage(20),
+	        Constraint::Percentage(20),
+	        Constraint::Percentage(5),
+	        Constraint::Percentage(20),
+	    ]);
 
-    (list, pet_detail)
-}
+		display = card_detail;
+	}
+    
 
-fn read_db() -> Result<Vec<Pet>, Box<dyn std::error::Error>> {
-    let db_content = fs::read_to_string(DB_PATH)?;
-    let parsed: Vec<Pet> = serde_json::from_str(&db_content)?;
-    Ok(parsed)
-}
-
-fn add_random_pet_to_db() -> Result<Vec<Pet>, Box<dyn std::error::Error>> {
-    let mut rng = rand::thread_rng();
-    let db_content = fs::read_to_string(DB_PATH)?;
-    let mut parsed: Vec<Pet> = serde_json::from_str(&db_content)?;
-    let range: i32 = rng.gen_range(0, 1);
-    let catsdogs = match range {
-        0 => "cats",
-        _ => "dogs",
-    };
-
-    let random_pet = Pet {
-        id: rng.gen_range(0, 9999999),
-        name: rng.sample_iter(Alphanumeric).take(10).collect(),
-        category: catsdogs.to_owned(),
-        age: rng.gen_range(1, 15),
-        created_at: Utc::now(),
-    };
-
-    parsed.push(random_pet);
-    fs::write(DB_PATH, &serde_json::to_vec(&parsed)?)?;
-    Ok(parsed)
-}
-
-fn remove_pet_at_index(pet_list_state: &mut ListState) -> Result<(), Box<dyn std::error::Error>> {
-    if let Some(selected) = pet_list_state.selected() {
-        let db_content = fs::read_to_string(DB_PATH)?;
-        let mut parsed: Vec<Pet> = serde_json::from_str(&db_content)?;
-        parsed.remove(selected);
-        fs::write(DB_PATH, &serde_json::to_vec(&parsed)?)?;
-        pet_list_state.select(Some(selected - 1));
-    }
-    Ok(())
+    (list, display)
 }
