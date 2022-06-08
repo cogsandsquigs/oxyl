@@ -46,16 +46,20 @@ pub fn add_random_card_to_db() -> Result<Vec<Pet>, Box<dyn std::error::Error>> {
     Ok(parsed)
 }
 
-pub fn remove_card_at_index(pet_list_state: &mut ListState) -> Result<(), Box<dyn std::error::Error>> {
-    if let Some(selected) = pet_list_state.selected() {
+pub fn remove_card_at_index(card_list_state: &mut ListState) -> Result<(), Box<dyn std::error::Error>> {
+    if let Some(selected) = card_list_state.selected() {
         let db_content = fs::read_to_string(DB_PATH)?;
         let mut parsed: Vec<Pet> = serde_json::from_str(&db_content)?;
         parsed.remove(selected);
         fs::write(DB_PATH, &serde_json::to_vec(&parsed)?)?;
         if parsed.len() != 0 {
-			pet_list_state.select(Some(selected - 1));
+			if selected != 0 {
+				card_list_state.select(Some(selected - 1));
+			} else {
+				card_list_state.select(Some(0));
+			}
 		} else {
-			pet_list_state.select(None);
+			card_list_state.select(None);
 		}
     }
     Ok(())

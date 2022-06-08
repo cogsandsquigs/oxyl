@@ -142,7 +142,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                             [Constraint::Percentage(20), Constraint::Percentage(80)].as_ref(),
                         )
                         .split(chunks[1]);
-                    let (left, right) = render_cards(&card_list_state);
+                    let (left, right) = render_cards(&mut card_list_state);
                     rect.render_stateful_widget(left, cards_chunks[0], &mut card_list_state);
                     rect.render_widget(right, cards_chunks[1]);
                 }
@@ -177,7 +177,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 KeyCode::Up => {
                     if let Some(selected) = card_list_state.selected() {
-                        let amount_cards = read_db().expect("can fetch card list").len();
+                        let amount_cards = read_db().expect("can't fetch card list").len();
                         if selected > 0 {
                             card_list_state.select(Some(selected - 1));
                         } else {
@@ -218,7 +218,7 @@ fn render_home<'a>() -> Paragraph<'a> {
     home
 }
 
-fn render_cards<'a>(card_list_state: &ListState) -> (List<'a>, Table<'a>) {
+fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
     let cards = Block::default()
         .borders(Borders::ALL)
         .style(Style::default().fg(Color::White))
@@ -230,6 +230,8 @@ fn render_cards<'a>(card_list_state: &ListState) -> (List<'a>, Table<'a>) {
 		create_db().expect("could not create a new db");
 		read_db().expect("read db")
 	});
+
+	// cards into ListItems
     let items: Vec<_> = card_list
         .iter()
         .map(|card| {
@@ -240,7 +242,7 @@ fn render_cards<'a>(card_list_state: &ListState) -> (List<'a>, Table<'a>) {
         })
         .collect();
 
-	// gets all the cards
+	// gets all the cards as ListItems into a list
 	let list = List::new(items).block(cards).highlight_style(
         Style::default()
             .bg(Color::Blue)
@@ -248,17 +250,19 @@ fn render_cards<'a>(card_list_state: &ListState) -> (List<'a>, Table<'a>) {
             .add_modifier(Modifier::BOLD),
     );
 	
-	// gets the selected card if there are
-	// cards present in the db
-
 	let mut display = Table::new(None);
 	
-	if card_list.len() != 0 || !card_list_state.selected().is_none() {
+	// gets the selected card if there are
+	// cards present in the db
+	if card_list.len() != 0 {
 		let selected_card = card_list
 		.get(
 			card_list_state
 				.selected()
-				.expect("there is always a selected card"),
+				.unwrap_or_else(|| {
+					card_list_state.select(Some(0));
+					return 0;
+				}),
 		)
 		.expect("no card exists")
 		.clone();
