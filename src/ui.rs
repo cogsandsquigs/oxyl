@@ -292,8 +292,8 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 		// set the data of the table
 	    let card_detail = Table::new(vec![Row::new(vec![
 	        Cell::from(Span::raw(selected_card.concept)),
-				Cell::from(Span::raw(selected_card.front)),
-				Cell::from(Span::raw(selected_card.back)),
+			Cell::from(Span::raw(selected_card.front)),
+			Cell::from(Span::raw(selected_card.back)),
 	        Cell::from(Span::raw(selected_card.bucket.to_string())),
 	    ])])
 		// set the headers of the table
