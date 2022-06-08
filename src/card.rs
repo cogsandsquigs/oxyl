@@ -12,6 +12,12 @@ pub struct Card {
 
 }
 
+impl Card {
+	pub fn title(&self) -> String {
+		self.concept.clone() + ":" + &self.front.clone()
+	}
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Pet {
     pub id: u64,

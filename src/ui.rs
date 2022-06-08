@@ -32,14 +32,18 @@ enum Event<I> {
 #[derive(Copy, Clone, Debug)]
 enum MenuItem {
     Home,
+	Study,
     Cards,
+	Edit,
 }
 
 impl From<MenuItem> for usize {
     fn from(input: MenuItem) -> usize {
         match input {
             MenuItem::Home => 0,
-            MenuItem::Cards => 1,
+            MenuItem::Study => 1,
+			MenuItem::Cards => 2,
+			MenuItem::Edit => 3,
         }
     }
 }
@@ -75,7 +79,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
     let mut terminal = Terminal::new(backend)?;
     terminal.clear()?;
 
-    let menu_titles = vec!["Home", "Cards", "Add a card", "Quit"];
+    let menu_titles = vec!["Home", "Study", "Cards", "Add a card", "Delete a card", "Edit a card", "Quit"];
     let mut active_menu_item = MenuItem::Home;
     let mut card_list_state = ListState::default();
     card_list_state.select(Some(0));
@@ -97,6 +101,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                 .split(size);
 
             // the footer element
+			/*
             let footer = Paragraph::new("oxyl")
                 .style(Style::default().fg(Color::LightCyan))
                 .alignment(Alignment::Center)
@@ -107,6 +112,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                         .title("")
                         .border_type(BorderType::Plain),
                 );
+			*/
 
 			// the menu element
             let menu = menu_titles
@@ -135,7 +141,10 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
             rect.render_widget(tabs, chunks[0]);
             match active_menu_item {
                 MenuItem::Home => rect.render_widget(render_home(), chunks[1]),
-                MenuItem::Cards => {
+				MenuItem::Study => {
+					()
+				},
+				MenuItem::Cards => {
                     let cards_chunks = Layout::default()
                         .direction(Direction::Horizontal)
                         .constraints(
@@ -145,9 +154,12 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                     let (left, right) = render_cards(&mut card_list_state);
                     rect.render_stateful_widget(left, cards_chunks[0], &mut card_list_state);
                     rect.render_widget(right, cards_chunks[1]);
-                }
+                },
+				MenuItem::Edit => {
+					()
+				},
             }
-            rect.render_widget(footer, chunks[2]);
+            //rect.render_widget(footer, chunks[2]);
         })?;
 
         match rx.recv()? {
@@ -203,7 +215,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
     }
     Ok(())
 }
-
+// renders the cards, returns a widget to render
 fn render_home<'a>() -> Paragraph<'a> {
     let home = Paragraph::new(vec![
         Spans::from(vec![Span::raw("")]),
@@ -212,11 +224,9 @@ fn render_home<'a>() -> Paragraph<'a> {
         Spans::from(vec![Span::raw("to")]),
         Spans::from(vec![Span::raw("")]),
         Spans::from(vec![Span::styled(
-            "card-CLI",
+            "Oxyl!",
             Style::default().fg(Color::LightBlue),
         )]),
-        Spans::from(vec![Span::raw("")]),
-        Spans::from(vec![Span::raw("Press 'p' to access cards, 'a' to add random new cards and 'd' to delete the currently selected card.")]),
     ])
     .alignment(Alignment::Center)
     .block(
@@ -248,7 +258,7 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
         .iter()
         .map(|card| {
             ListItem::new(Spans::from(vec![Span::styled(
-                card.concept.clone() + ":" + &card.front.clone(),
+				card.title(),
                 Style::default(),
             )]))
         })
