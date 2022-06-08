@@ -163,7 +163,18 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                     add_random_card_to_db().expect("can add new random card");
                 }
                 KeyCode::Char('d') => {
-                    remove_card_at_index(&mut card_list_state).expect("can remove card");
+					if let Some(selected) = card_list_state.selected() {
+						if read_db().expect("can't fetch card list").len() != 0 {
+							if selected != 0 {
+								card_list_state.select(Some(selected - 1));
+							} else {
+								card_list_state.select(Some(0));
+							}
+							remove_card_at_index(selected).expect("can't remove card");
+						} else {
+							card_list_state.select(None);
+						}
+				    }
                 }
                 KeyCode::Down => {
                     if let Some(selected) = card_list_state.selected() {
@@ -258,11 +269,11 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 		let selected_card = card_list
 		.get(
 			card_list_state
-				.selected()
-				.unwrap_or_else(|| {
-					card_list_state.select(Some(0));
-					return 0;
-				}),
+			.selected()
+			.unwrap_or_else(|| {
+				card_list_state.select(Some(0));
+				return 0;
+			}),
 		)
 		.expect("no card exists")
 		.clone();
