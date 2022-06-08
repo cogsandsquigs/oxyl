@@ -14,7 +14,7 @@ pub struct Card {
 
 impl Card {
 	pub fn title(&self) -> String {
-		self.concept.clone() + ":" + &self.front.clone()
+		self.concept.clone() + ": " + &self.front.clone()
 	}
 }
 
