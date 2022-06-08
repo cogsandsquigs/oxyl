@@ -262,7 +262,7 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
             .add_modifier(Modifier::BOLD),
     );
 	
-	let mut display = Table::new(None);
+	let mut table = Table::new(None);
 	
 	// gets the selected card if there are
 	// cards present in the db
@@ -278,7 +278,8 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 		)
 		.expect("no card exists")
 		.clone();
-	
+
+		// draws out the details of the cards
 	    let card_detail = Table::new(vec![Row::new(vec![
 	        Cell::from(Span::raw(selected_card.id.to_string())),
 	        Cell::from(Span::raw(selected_card.name)),
@@ -323,9 +324,9 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 	        Constraint::Percentage(20),
 	    ]);
 
-		display = card_detail;
+		table = card_detail;
 	}
     
-
-    (list, display)
+	// return the displayed widgets
+    (list, table)
 }
