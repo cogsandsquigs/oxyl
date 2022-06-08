@@ -1,12 +1,15 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Card {
-    pub created_at: String, // time string it was created at
+	pub id: u64,
     pub concept: String,
     pub front: String,
     pub back: String,
     pub bucket: u64,
+	pub created_at: DateTime<Utc>, // time string it was created at
+
 }
 
 #[derive(Serialize, Deserialize, Clone)]

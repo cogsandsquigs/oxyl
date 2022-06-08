@@ -139,7 +139,7 @@ pub fn render() -> Result<(), Box<dyn std::error::Error>> {
                     let cards_chunks = Layout::default()
                         .direction(Direction::Horizontal)
                         .constraints(
-                            [Constraint::Percentage(20), Constraint::Percentage(80)].as_ref(),
+                            [Constraint::Percentage(30), Constraint::Percentage(70)].as_ref(),
                         )
                         .split(chunks[1]);
                     let (left, right) = render_cards(&mut card_list_state);
@@ -216,7 +216,7 @@ fn render_home<'a>() -> Paragraph<'a> {
             Style::default().fg(Color::LightBlue),
         )]),
         Spans::from(vec![Span::raw("")]),
-        Spans::from(vec![Span::raw("Press 'p' to access Cards, 'a' to add random new Cards and 'd' to delete the currently selected card.")]),
+        Spans::from(vec![Span::raw("Press 'p' to access cards, 'a' to add random new cards and 'd' to delete the currently selected card.")]),
     ])
     .alignment(Alignment::Center)
     .block(
@@ -248,7 +248,7 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
         .iter()
         .map(|card| {
             ListItem::new(Spans::from(vec![Span::styled(
-                card.name.clone(),
+                card.concept.clone() + ":" + &card.front.clone(),
                 Style::default(),
             )]))
         })
@@ -279,36 +279,33 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 		.expect("no card exists")
 		.clone();
 
-		// draws out the details of the cards
+		// set the data of the table
 	    let card_detail = Table::new(vec![Row::new(vec![
-	        Cell::from(Span::raw(selected_card.id.to_string())),
-	        Cell::from(Span::raw(selected_card.name)),
-	        Cell::from(Span::raw(selected_card.category)),
-	        Cell::from(Span::raw(selected_card.age.to_string())),
-	        Cell::from(Span::raw(selected_card.created_at.to_string())),
+	        Cell::from(Span::raw(selected_card.concept)),
+				Cell::from(Span::raw(selected_card.front)),
+				Cell::from(Span::raw(selected_card.back)),
+	        Cell::from(Span::raw(selected_card.bucket.to_string())),
 	    ])])
+		// set the headers of the table
 	    .header(Row::new(vec![
 	        Cell::from(Span::styled(
-	            "ID",
+	            "Concept",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+			Cell::from(Span::styled(
+	            "Front",
+	            Style::default().add_modifier(Modifier::BOLD),
+	        )),
+			Cell::from(Span::styled(
+	            "Back",
 	            Style::default().add_modifier(Modifier::BOLD),
 	        )),
 	        Cell::from(Span::styled(
-	            "Name",
-	            Style::default().add_modifier(Modifier::BOLD),
-	        )),
-	        Cell::from(Span::styled(
-	            "Category",
-	            Style::default().add_modifier(Modifier::BOLD),
-	        )),
-	        Cell::from(Span::styled(
-	            "Age",
-	            Style::default().add_modifier(Modifier::BOLD),
-	        )),
-	        Cell::from(Span::styled(
-	            "Created At",
+	            "Bucket",
 	            Style::default().add_modifier(Modifier::BOLD),
 	        )),
 	    ]))
+		// set the block style (borders n stuff)
 	    .block(
 	        Block::default()
 	            .borders(Borders::ALL)
@@ -317,11 +314,10 @@ fn render_cards<'a>(card_list_state: &mut ListState) -> (List<'a>, Table<'a>) {
 	            .border_type(BorderType::Plain),
 	    )
 	    .widths(&[
-	        Constraint::Percentage(5),
-	        Constraint::Percentage(20),
-	        Constraint::Percentage(20),
-	        Constraint::Percentage(5),
-	        Constraint::Percentage(20),
+	        Constraint::Percentage(24),
+			Constraint::Percentage(32),
+			Constraint::Percentage(31),
+	        Constraint::Percentage(13),
 	    ]);
 
 		table = card_detail;
