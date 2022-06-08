@@ -11,6 +11,7 @@ pub const DB_PATH: &str = "./data/db.json";
 #[derive(Serialize, Deserialize, Clone)]
 pub struct UserData {
 	pub last_study_date: DateTime<Utc>,
+	pub num_study_days: u64,
 	pub cards: Vec<Card>,
 }
 
@@ -26,6 +27,7 @@ pub fn create_db() -> Result<(), Box<dyn std::error::Error>> {
 		&serde_json::to_vec(
 			&UserData{
 				last_study_date: Utc::now(),
+				num_study_days: 0,
 				cards: vec![],
 			},
 		)?
