@@ -1,5 +1,5 @@
 language = "nix"
-run = "cargo run"
+run = "go run ."
 
 [nix]
 channel = "unstable"
