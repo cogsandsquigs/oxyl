@@ -9,7 +9,7 @@ type EvalNode interface {
 }
 
 type Literal struct {
-	V int
+	v int
 }
 
 func NewLiteral(v int) Literal {
@@ -17,12 +17,12 @@ func NewLiteral(v int) Literal {
 }
 
 func (n Literal) Eval() int {
-	return n.V
+	return n.v
 }
 
 type Add struct {
-	L EvalNode
-	R EvalNode
+	l EvalNode
+	r EvalNode
 }
 
 func NewAdd(l, r EvalNode) Add {
@@ -30,5 +30,5 @@ func NewAdd(l, r EvalNode) Add {
 }
 
 func (n Add) Eval() int {
-	return n.L.Eval() + n.R.Eval()
+	return n.l.Eval() + n.r.Eval()
 }
