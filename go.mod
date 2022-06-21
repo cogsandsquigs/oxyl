@@ -1,3 +1,3 @@
-module main
+module oxyl
 
 go 1.18
