@@ -17,6 +17,6 @@ var versionCmd = &cobra.Command{
 	Short: "Prints oxyl's version number",
 	Long:  `Prints oxyl's version number`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Running %s version ✨%s✨\n", color.HiBlueString("oxyl"), color.HiGreenString(info.Version))
+		fmt.Printf("Running %s version ✨%s✨\n", color.HiCyanString("oxyl"), color.HiGreenString(info.Version))
 	},
 }
