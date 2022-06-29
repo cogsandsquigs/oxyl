@@ -1,3 +1,6 @@
 # oxyl
 
-A programming language i guess
+A programming language I guess.
+
+# requirements
+- ANTLRv4
