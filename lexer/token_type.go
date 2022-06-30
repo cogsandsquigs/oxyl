@@ -1,0 +1,28 @@
+package lexer
+
+type TokenType int
+
+const (
+	UNDEFINED TokenType = iota
+	EOL
+	EOF
+	IDENTIFIER
+	NUMBER
+	DOT
+	COMMA
+	SEMICOLON
+	LPAREN
+	RPAREN
+	LBRACE
+	RBRACE
+	LBRACKET
+	RBRACKET
+	PLUS
+	DASH
+	STAR
+	SLASH
+	EQUAL
+	NOT
+	LESS
+	GREATER
+)
