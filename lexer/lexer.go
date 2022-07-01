@@ -1,9 +1,7 @@
 package lexer
 
 import (
-	"fmt"
 	"io"
-	"log"
 
 	"oxyl/err"
 	"oxyl/token"
@@ -14,7 +12,6 @@ type Lexer struct {
 	line     int       // current line we are on
 	char     int       // current character of line we are on
 	pos      int       // current position of input we are on
-	fn       string    // name of file we are reading from
 	hadError bool      // errors we have encountered
 }
 
@@ -24,7 +21,6 @@ func New(in io.Reader) *Lexer {
 		line:     1,
 		char:     1,
 		pos:      0,
-		fn:       "none",
 		hadError: false,
 	}
 
@@ -32,9 +28,9 @@ func New(in io.Reader) *Lexer {
 }
 
 func (l *Lexer) Lex() ([]token.Token, error) {
-	return nil, fmt.Errorf("unimplemented")
+	return nil, l.error("not implemented")
 }
 
-func (l *Lexer) error(message string) {
-	log.Println(err.New(message, l.line, l.char, l.fn))
+func (l *Lexer) error(message string) error {
+	return err.New(message, l.line, l.char)
 }

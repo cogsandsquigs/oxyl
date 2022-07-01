@@ -7,19 +7,17 @@ type Error struct {
 	message   string // the error message
 	line      int    // line where it occured
 	character int    // character where it occured
-	file      string // name of file where it occured (path to file from where oxyl was executed)
 }
 
-func New(message string, line, character int, file string) Error {
+func New(message string, line, character int) Error {
 	return Error{
 		message:   message,
 		line:      line,
 		character: character,
-		file:      file,
 	}
 }
 
 // implements error type
 func (e Error) Error() string {
-	return fmt.Sprintf("[%d:%d] Error in %s: %s", e.line, e.character, e.file, e.message)
+	return fmt.Sprintf("[ERROR] line %d, character %d: %s", e.line, e.character, e.message)
 }
