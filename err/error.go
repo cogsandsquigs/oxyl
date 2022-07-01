@@ -21,5 +21,5 @@ func New(message string, line, character int, file string) Error {
 
 // implements error type
 func (e Error) Error() string {
-	return fmt.Sprintf("%d:%d Error in %s: %s", e.line, e.character, e.file, e.message)
+	return fmt.Sprintf("[%d:%d] Error in %s: %s", e.line, e.character, e.file, e.message)
 }

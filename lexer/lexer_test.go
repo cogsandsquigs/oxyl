@@ -8,12 +8,10 @@ import (
 func TestLexer(t *testing.T) {
 	in := strings.NewReader(".,+-*/")
 	lexer := New(in)
-	errs, tokens := lexer.Lex()
+	tokens, err := lexer.Lex()
 
-	if len(errs) > 0 {
-		for _, err := range errs {
-			t.Error(err)
-		}
+	if err != nil {
+		t.Error(err)
 	}
 
 	if tokens == nil {
@@ -21,6 +19,6 @@ func TestLexer(t *testing.T) {
 	}
 
 	for _, token := range tokens {
-		t.Logf("%s", token)
+		t.Logf("%d", token)
 	}
 }
