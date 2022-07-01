@@ -3,10 +3,14 @@ package token
 type Token int
 
 const (
+	// placeholder for any unknown tokens
+	UNKNOWN Token = iota
 
 	// single-character tokens
-	LEFT_PAREN Token = iota
+	LEFT_PAREN
 	RIGHT_PAREN
+	LEFT_BRACKET
+	RIGHT_BRACKET
 	LEFT_BRACE
 	RIGHT_BRACE
 	COMMA
@@ -65,3 +69,24 @@ const (
 	PIPE
 	OR
 )
+
+// Returns the string representation of the token types.
+// Ex:
+//	FUN.String() // returns "fun"
+//	IDENTIFIER.String() // returns "identifier"
+func (t Token) String() string {
+	switch t {
+	case EOF:
+		return "EOF"
+	case LEFT_PAREN:
+		return "("
+	case RIGHT_PAREN:
+		return ")"
+	case LEFT_BRACKET:
+		return "["
+	case RIGHT_BRACKET:
+		return "]"
+	default:
+		return "unknown"
+	}
+}
