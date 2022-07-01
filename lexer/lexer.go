@@ -10,8 +10,9 @@ import (
 type Lexer struct {
 	in       io.Reader // input for lexer
 	line     int       // current line we are on
-	char     int       // current character of line we are on
-	pos      int       // current position of input we are on
+	col      int       // current character of line we are on
+	pos      int       // current position in input
+	ch       byte      // current character of input we are on
 	hadError bool      // errors we have encountered
 }
 
@@ -19,7 +20,7 @@ func New(in io.Reader) *Lexer {
 	lexer := &Lexer{
 		in:       in,
 		line:     1,
-		char:     1,
+		col:      1,
 		pos:      0,
 		hadError: false,
 	}
@@ -32,5 +33,5 @@ func (l *Lexer) Lex() ([]token.Token, error) {
 }
 
 func (l *Lexer) error(message string) error {
-	return err.New(message, l.line, l.char)
+	return err.New(message, l.line, l.col)
 }
