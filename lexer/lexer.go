@@ -43,7 +43,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 		switch ch {
 		case ' ':
 		case '\t':
-			break
+			continue
 		case '\n':
 			l.line++
 			lexemes = append(lexemes, token.NEWLINE)
