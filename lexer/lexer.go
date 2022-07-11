@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -51,6 +50,13 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 		case ch == '\n':
 			l.line++
 			lexemes = append(lexemes, token.NEWLINE)
+
+		// matches "fun " so that it does not return a FUN token for something
+		// like "funtest", when it should be "fun test"
+		case l.match([]byte("fun ")...):
+			lexemes = append(lexemes, token.FUN)
+
+		// parses identifiers, must come after keywords
 		case regexp.MustCompile("[a-zA-Z]").MatchString(string(ch)):
 			identifier := ""
 			for regexp.MustCompile("[a-zA-Z]").MatchString(string(ch)) {
@@ -98,25 +104,23 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 
 				l.backup(1)
 
-				i, err := strconv.ParseFloat(number, 64)
+				n, err := strconv.ParseFloat(number, 64)
 
 				if err != nil {
-					fmt.Println(err)
 					return nil, err
 				}
 
-				lexemes = append(lexemes, NewLiteralLexeme(i, token.FLOAT))
+				lexemes = append(lexemes, NewLiteralLexeme(n, token.FLOAT))
 			} else {
 				l.backup(1)
 
-				i, err := strconv.ParseInt(number, 10, 64)
+				n, err := strconv.ParseInt(number, 10, 64)
 
 				if err != nil {
-					fmt.Println(err)
 					return nil, err
 				}
 
-				lexemes = append(lexemes, NewLiteralLexeme(i, token.INT))
+				lexemes = append(lexemes, NewLiteralLexeme(n, token.INT))
 			}
 
 		default:
@@ -126,7 +130,8 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 	}
 }
 
-// returns the current character we are at
+// Returns the current character we are at.
+// If the end of the input is reached, `EOF` is returned.
 func (l *Lexer) current() (byte, error) {
 	if l.pos >= len(l.in) {
 		return 0, io.EOF
@@ -141,6 +146,20 @@ func (l *Lexer) current() (byte, error) {
 func (l *Lexer) next(chars int) (byte, error) {
 	l.pos += chars
 	return l.current()
+}
+
+// Matches a list of characters to the current list of characters in the buffer.
+// If the characters match, the lexer is advanced by the number of characters in the list and returns true.
+// If the characters do not match, the lexer remains in place and returns false.
+func (l *Lexer) match(chars ...byte) bool {
+	for i, ch := range chars {
+		peek, err := l.peek(i)
+		if ch != peek || err != nil {
+			return false
+		}
+	}
+	l.next(len(chars))
+	return true
 }
 
 // backs up the lexer by one character

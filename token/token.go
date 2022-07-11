@@ -25,7 +25,7 @@ const (
 
 	// keywords
 	// variable declarations
-	VAR
+	LET
 	// control flow
 	IF
 	ELSE
@@ -98,6 +98,8 @@ func (t Token) String() string {
 		return "Int"
 	case FLOAT:
 		return "Float"
+	case FUN:
+		return "Function"
 	case NEWLINE:
 		return "Newline"
 	default:
