@@ -98,7 +98,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 
 				l.backup(1)
 
-				i, err := strconv.ParseFloat(number, 0)
+				i, err := strconv.ParseFloat(number, 64)
 
 				if err != nil {
 					fmt.Println(err)
