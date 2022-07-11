@@ -3,6 +3,8 @@ package lexer
 import (
 	"fmt"
 	"io"
+	"regexp"
+	"strconv"
 
 	"oxyl/err"
 	"oxyl/token"
@@ -32,7 +34,6 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 	lexemes := []Lexeme{}
 	for {
 		ch, err := l.current()
-
 		if err == io.EOF {
 			lexemes = append(lexemes, token.EOF)
 			return lexemes, nil
@@ -40,18 +41,87 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			return nil, err
 		}
 
-		switch ch {
-		case ' ':
-		case '\t':
+		switch ch := ch; {
+		case ch == ' ':
+			l.next(1)
 			continue
-		case '\n':
+		case ch == '\t':
+			l.next(1)
+			continue
+		case ch == '\n':
 			l.line++
 			lexemes = append(lexemes, token.NEWLINE)
+		case regexp.MustCompile("[a-zA-Z]").MatchString(string(ch)):
+			identifier := ""
+			for regexp.MustCompile("[a-zA-Z]").MatchString(string(ch)) {
+				identifier += string(ch)
+				ch, err = l.next(1)
+
+				if err != nil && err != io.EOF {
+					return nil, err
+				}
+			}
+
+			l.backup(1)
+
+			lexemes = append(lexemes, NewLiteralLexeme(identifier, token.IDENTIFIER))
+
+		// parses ints and floats
+		case regexp.MustCompile("[0-9]").MatchString(string(ch)):
+			number := ""
+			for regexp.MustCompile("[0-9]").MatchString(string(ch)) {
+				number += string(ch)
+				ch, err = l.next(1)
+
+				if err != nil && err != io.EOF {
+					return nil, err
+				}
+			}
+
+			// this means floats can be parsed like 1. instead of 1.0
+			if ch == '.' {
+				number += string(ch)
+				ch, err = l.next(1)
+
+				if err != nil && err != io.EOF {
+					return nil, err
+				}
+
+				for regexp.MustCompile("[0-9]").MatchString(string(ch)) {
+					number += string(ch)
+					ch, err = l.next(1)
+
+					if err != nil && err != io.EOF {
+						return nil, err
+					}
+				}
+
+				l.backup(1)
+
+				i, err := strconv.ParseFloat(number, 0)
+
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+
+				lexemes = append(lexemes, NewLiteralLexeme(i, token.FLOAT))
+			} else {
+				l.backup(1)
+
+				i, err := strconv.ParseInt(number, 10, 0)
+
+				if err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+
+				lexemes = append(lexemes, NewLiteralLexeme(i, token.INT))
+			}
+
 		default:
 			lexemes = append(lexemes, token.UNKNOWN)
 		}
-
-		fmt.Printf("%s", string(ch))
 		l.next(1)
 	}
 }

@@ -90,8 +90,18 @@ func (t Token) String() string {
 		return "["
 	case RIGHT_BRACKET:
 		return "]"
+	case IDENTIFIER:
+		return "Identifier"
+	case STRING:
+		return "String"
+	case INT:
+		return "Int"
+	case FLOAT:
+		return "Float"
+	case NEWLINE:
+		return "Newline"
 	default:
-		return "unknown"
+		return "Unknown"
 	}
 }
 

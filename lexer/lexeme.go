@@ -23,7 +23,7 @@ func NewLiteralLexeme(value any, tokenT token.Token) LiteralLexeme {
 }
 
 func (l LiteralLexeme) String() string {
-	return fmt.Sprintf("literal: %v", l.value)
+	return fmt.Sprintf("%s: %v", l.token.String(), l.value)
 }
 
 func (l LiteralLexeme) Token() token.Token {

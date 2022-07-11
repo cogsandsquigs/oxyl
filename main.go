@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	lexer := lexer.New("test 1 2 3")
+	lexer := lexer.New("test\n1 2.0 3.1")
 
 	toks, err := lexer.Lex()
 
