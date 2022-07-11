@@ -1,13 +1,11 @@
 package lexer
 
 import (
-	"strings"
 	"testing"
 )
 
 func TestLexer(t *testing.T) {
-	in := strings.NewReader(".,+-*/")
-	lexer := New(in)
+	lexer := New(".+-*/()[]{}")
 	tokens, err := lexer.Lex()
 
 	if err != nil {

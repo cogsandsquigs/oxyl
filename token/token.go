@@ -19,7 +19,8 @@ const (
 	// literals
 	IDENTIFIER
 	STRING
-	NUMBER
+	INT
+	FLOAT
 	BOOLEAN
 
 	// keywords
@@ -37,6 +38,9 @@ const (
 	// type declarations
 	TYPE
 	SELF // for accessing the type's methods
+
+	// newline
+	NEWLINE
 
 	// end of file
 	EOF
@@ -89,4 +93,8 @@ func (t Token) String() string {
 	default:
 		return "unknown"
 	}
+}
+
+func (t Token) Token() Token {
+	return t
 }

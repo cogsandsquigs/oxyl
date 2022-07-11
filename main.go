@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"log"
 	"oxyl/lexer"
-	"strings"
 )
 
 func main() {
-	in := strings.NewReader("test 1 2 3")
-	lexer := lexer.New(in)
+	lexer := lexer.New("test 1 2 3")
 
 	toks, err := lexer.Lex()
 
