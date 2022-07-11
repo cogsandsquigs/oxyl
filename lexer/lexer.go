@@ -109,7 +109,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			} else {
 				l.backup(1)
 
-				i, err := strconv.ParseInt(number, 10, 0)
+				i, err := strconv.ParseInt(number, 10, 64)
 
 				if err != nil {
 					fmt.Println(err)
