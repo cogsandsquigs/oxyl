@@ -5,7 +5,16 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	lexer := New(".+-*/()[]{}")
+	lexer := New(`
+	fun main() {
+		println("hello world")
+
+		let a = 1
+		let b = 2
+		let c = a + b
+		println(c)
+	}
+	`)
 	tokens, err := lexer.Lex()
 
 	if err != nil {
