@@ -21,11 +21,19 @@ func TestLexer(t *testing.T) {
 		t.Error(err)
 	}
 
+	if lexer.hadError {
+		t.Error("had error")
+	}
+
 	if tokens == nil {
 		t.Error("tokens is nil")
 	}
 
+	if len(tokens) != 41 {
+		t.Errorf("expected 41 tokens, got %d", len(tokens))
+	}
+
 	for _, token := range tokens {
-		t.Logf("%d", token)
+		t.Logf("%s", token.String())
 	}
 }
