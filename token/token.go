@@ -15,6 +15,8 @@ const (
 	RIGHT_BRACE
 	COMMA
 	DOT
+	DOUBLE_QUOTE
+	SINGLE_QUOTE
 
 	// literals
 	IDENTIFIER
@@ -75,7 +77,8 @@ func (t Token) String() string {
 	case NEWLINE:
 		return "Newline"
 	default:
-		return "Unknown"
+		// maybe this could be an operator?
+		return Operator(t).String()
 	}
 }
 
@@ -92,12 +95,11 @@ const (
 	// operators, single caracters
 	DASH Operator = iota + Operator(EOF)
 	PLUS
-	SEMICOLON
 	SLASH
 	STAR
 	CARET
 	PERCENT
-	AMPERSAND
+	AMP
 	PIPE
 	GREATER
 	LESS
@@ -112,6 +114,57 @@ const (
 	AND
 	OR
 )
+
+// Returns the string representation of the token types.
+// Ex:
+//	FUN.String() // returns "fun"
+//	IDENTIFIER.String() // returns "identifier"
+func (o Operator) String() string {
+	switch o {
+	case DASH:
+		return "-"
+	case PLUS:
+		return "+"
+	case SLASH:
+		return "/"
+	case STAR:
+		return "*"
+	case CARET:
+		return "^"
+	case PERCENT:
+		return "%"
+	case AMP:
+		return "&"
+	case PIPE:
+		return "|"
+	case GREATER:
+		return ">"
+	case LESS:
+		return "<"
+	case BANG:
+		return "!"
+	case EQUAL:
+		return "="
+	case BANG_EQUAL:
+		return "!="
+	case EQUAL_EQUAL:
+		return "=="
+	case GREATER_EQUAL:
+		return ">="
+	case LESS_EQUAL:
+		return "<="
+	case AND:
+		return "&&"
+	case OR:
+		return "||"
+	default:
+		return "Unknown"
+	}
+}
+
+func (o Operator) Token() Token {
+	return Token(o)
+}
 
 // Returns the operator's precedence in binary expression parsing.
 // Ex: PLUS.Precedence() // returns 1

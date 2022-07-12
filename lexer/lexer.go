@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -50,7 +51,46 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 		case ch == '\n':
 			l.line++
 			lexemes = append(lexemes, token.NEWLINE)
-
+		case ch == '+':
+			lexemes = append(lexemes, token.PLUS)
+		case ch == '-':
+			lexemes = append(lexemes, token.DASH)
+		case ch == '*':
+			lexemes = append(lexemes, token.STAR)
+		case ch == '/':
+			lexemes = append(lexemes, token.SLASH)
+		case ch == '%':
+			lexemes = append(lexemes, token.PERCENT)
+		case ch == '^':
+			lexemes = append(lexemes, token.CARET)
+		case ch == '=':
+			lexemes = append(lexemes, token.EQUAL)
+		case ch == '<':
+			lexemes = append(lexemes, token.LESS)
+		case ch == '>':
+			lexemes = append(lexemes, token.GREATER)
+		case ch == '!':
+			lexemes = append(lexemes, token.BANG)
+		case l.match([]byte("&&")...):
+			lexemes = append(lexemes, token.AND)
+		case ch == '&':
+			lexemes = append(lexemes, token.AMP)
+		case l.match([]byte("||")...):
+			lexemes = append(lexemes, token.OR)
+		case ch == '|':
+			lexemes = append(lexemes, token.PIPE)
+		case l.match([]byte("==")...):
+			lexemes = append(lexemes, token.EQUAL_EQUAL)
+		case l.match([]byte("!=")...):
+			lexemes = append(lexemes, token.BANG_EQUAL)
+		case l.match([]byte("<=")...):
+			lexemes = append(lexemes, token.LESS_EQUAL)
+		case l.match([]byte(">=")...):
+			lexemes = append(lexemes, token.GREATER_EQUAL)
+		case ch == '"':
+			lexemes = append(lexemes, token.DOUBLE_QUOTE)
+		case ch == '\'':
+			lexemes = append(lexemes, token.SINGLE_QUOTE)
 		// matches "fun " so that it does not return a FUN token for something
 		// like "funtest", when it should be "fun test"
 		case l.match([]byte("fun ")...):
@@ -124,6 +164,8 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			}
 
 		default:
+			l.hadError = true
+			fmt.Println(l.error(fmt.Sprintf("Unexpected character: %s", string(ch))))
 			lexemes = append(lexemes, token.UNKNOWN)
 		}
 		l.next(1)
@@ -158,7 +200,7 @@ func (l *Lexer) match(chars ...byte) bool {
 			return false
 		}
 	}
-	l.next(len(chars))
+	l.next(len(chars) - 1)
 	return true
 }
 
