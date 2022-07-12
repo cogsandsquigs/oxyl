@@ -7,7 +7,16 @@ import (
 )
 
 func main() {
-	lexer := lexer.New("fun test\n1 2.0 3.1")
+	lexer := lexer.New(`
+	fun main() {
+		println("hello world")
+
+		let a = 1
+		let b = 2
+		let c = a + b
+		println(c)
+	}
+	`)
 
 	toks, err := lexer.Lex()
 

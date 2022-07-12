@@ -60,6 +60,10 @@ func (t Token) String() string {
 		return "("
 	case RIGHT_PAREN:
 		return ")"
+	case LEFT_BRACE:
+		return "{"
+	case RIGHT_BRACE:
+		return "}"
 	case LEFT_BRACKET:
 		return "["
 	case RIGHT_BRACKET:
@@ -72,8 +76,24 @@ func (t Token) String() string {
 		return "Int"
 	case FLOAT:
 		return "Float"
+	case BOOLEAN:
+		return "Boolean"
+	case LET:
+		return "let"
+	case IF:
+		return "if"
 	case FUN:
 		return "Function"
+	case RETURN:
+		return "return"
+	case WHILE:
+		return "while"
+	case FOR:
+		return "for"
+	case TYPE:
+		return "type"
+	case SELF:
+		return "self"
 	case NEWLINE:
 		return "Newline"
 	default:

@@ -11,7 +11,7 @@ import (
 )
 
 type Lexer struct {
-	in       string // input for lexer
+	in       []rune // input for lexer
 	line     int    // current line we are on
 	col      int    // current character of line we are on
 	pos      int    // current position in input
@@ -20,7 +20,7 @@ type Lexer struct {
 
 func New(in string) *Lexer {
 	lexer := &Lexer{
-		in:       in,
+		in:       []rune(in),
 		line:     1,
 		col:      1,
 		pos:      0,
@@ -51,6 +51,24 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 		case ch == '\n':
 			l.line++
 			lexemes = append(lexemes, token.NEWLINE)
+		case ch == '\r':
+			lexemes = append(lexemes, token.NEWLINE)
+		case ch == '(':
+			lexemes = append(lexemes, token.LEFT_PAREN)
+		case ch == ')':
+			lexemes = append(lexemes, token.RIGHT_PAREN)
+		case ch == '{':
+			lexemes = append(lexemes, token.LEFT_BRACE)
+		case ch == '}':
+			lexemes = append(lexemes, token.RIGHT_BRACE)
+		case ch == '[':
+			lexemes = append(lexemes, token.LEFT_BRACKET)
+		case ch == ']':
+			lexemes = append(lexemes, token.RIGHT_BRACKET)
+		case ch == ',':
+			lexemes = append(lexemes, token.COMMA)
+		case ch == '.':
+			lexemes = append(lexemes, token.DOT)
 		case ch == '+':
 			lexemes = append(lexemes, token.PLUS)
 		case ch == '-':
@@ -69,33 +87,34 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			lexemes = append(lexemes, token.LESS)
 		case ch == '>':
 			lexemes = append(lexemes, token.GREATER)
-		case ch == '!':
-			lexemes = append(lexemes, token.BANG)
-		case l.match([]byte("&&")...):
-			lexemes = append(lexemes, token.AND)
-		case ch == '&':
-			lexemes = append(lexemes, token.AMP)
-		case l.match([]byte("||")...):
-			lexemes = append(lexemes, token.OR)
-		case ch == '|':
-			lexemes = append(lexemes, token.PIPE)
-		case l.match([]byte("==")...):
-			lexemes = append(lexemes, token.EQUAL_EQUAL)
-		case l.match([]byte("!=")...):
-			lexemes = append(lexemes, token.BANG_EQUAL)
-		case l.match([]byte("<=")...):
-			lexemes = append(lexemes, token.LESS_EQUAL)
-		case l.match([]byte(">=")...):
-			lexemes = append(lexemes, token.GREATER_EQUAL)
 		case ch == '"':
 			lexemes = append(lexemes, token.DOUBLE_QUOTE)
 		case ch == '\'':
 			lexemes = append(lexemes, token.SINGLE_QUOTE)
-		// matches "fun " so that it does not return a FUN token for something
-		// like "funtest", when it should be "fun test"
-		case l.match([]byte("fun ")...):
+		case ch == '!':
+			lexemes = append(lexemes, token.BANG)
+		case l.match("&&"): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.AND)
+		case ch == '&':
+			lexemes = append(lexemes, token.AMP)
+		case l.match("||"): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.OR)
+		case ch == '|':
+			lexemes = append(lexemes, token.PIPE)
+		case l.match("=="): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.EQUAL_EQUAL)
+		case l.match("!="): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.BANG_EQUAL)
+		case l.match("<="): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.LESS_EQUAL)
+		case l.match(">="): // TODO: more efficient way to do this?
+			lexemes = append(lexemes, token.GREATER_EQUAL)
+		// matches "let " so that it does not return a LET token for something
+		// like "lettest", when it should be "let test"
+		case l.match("let "):
+			lexemes = append(lexemes, token.LET)
+		case l.match("fun "):
 			lexemes = append(lexemes, token.FUN)
-
 		// parses identifiers, must come after keywords
 		case regexp.MustCompile("[a-zA-Z]").MatchString(string(ch)):
 			identifier := ""
@@ -164,8 +183,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			}
 
 		default:
-			l.hadError = true
-			fmt.Println(l.error(fmt.Sprintf("Unexpected character: %s", string(ch))))
+			l.report("Unrecognized character %s", string(ch))
 			lexemes = append(lexemes, token.UNKNOWN)
 		}
 		l.next(1)
@@ -174,7 +192,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 
 // Returns the current character we are at.
 // If the end of the input is reached, `EOF` is returned.
-func (l *Lexer) current() (byte, error) {
+func (l *Lexer) current() (rune, error) {
 	if l.pos >= len(l.in) {
 		return 0, io.EOF
 	}
@@ -185,7 +203,7 @@ func (l *Lexer) current() (byte, error) {
 // Advances the lexer by one character, and returns the character we are at.
 // For example, `l.next(1)` advances one place and returns the character 1 character ahead of the current character.
 // If the end of the input is reached, `EOF` is returned.
-func (l *Lexer) next(chars int) (byte, error) {
+func (l *Lexer) next(chars int) (rune, error) {
 	l.pos += chars
 	return l.current()
 }
@@ -193,7 +211,7 @@ func (l *Lexer) next(chars int) (byte, error) {
 // Matches a list of characters to the current list of characters in the buffer.
 // If the characters match, the lexer is advanced by the number of characters in the list and returns true.
 // If the characters do not match, the lexer remains in place and returns false.
-func (l *Lexer) match(chars ...byte) bool {
+func (l *Lexer) match(chars string) bool {
 	for i, ch := range chars {
 		peek, err := l.peek(i)
 		if ch != peek || err != nil {
@@ -206,7 +224,7 @@ func (l *Lexer) match(chars ...byte) bool {
 
 // backs up the lexer by one character
 // and returns the character we are at
-func (l *Lexer) backup(chars int) (byte, error) {
+func (l *Lexer) backup(chars int) (rune, error) {
 	l.pos -= chars
 	return l.current()
 }
@@ -214,7 +232,7 @@ func (l *Lexer) backup(chars int) (byte, error) {
 // Returns a character peeked at, `chars` characters away from the current character.
 // For example, `l.peek(1)` returns the character 1 character ahead of the current character.
 // If the end of the input is reached, `EOF` is returned.
-func (l *Lexer) peek(chars int) (byte, error) {
+func (l *Lexer) peek(chars int) (rune, error) {
 	ch, err := l.next(chars)
 
 	if err != nil {
@@ -225,6 +243,11 @@ func (l *Lexer) peek(chars int) (byte, error) {
 	return ch, nil
 }
 
-func (l *Lexer) error(message string) error {
-	return err.New(message, l.line, l.col)
+func (l *Lexer) report(message string, args ...any) {
+	l.hadError = true
+	fmt.Println(l.error(message, args...))
+}
+
+func (l *Lexer) error(message string, args ...any) error {
+	return err.New(fmt.Sprintf(message, args...), l.line, l.col)
 }
