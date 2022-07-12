@@ -40,7 +40,7 @@ func (l *Lexer) Lex() ([]Lexeme, error) {
 			return nil, err
 		}
 
-		switch ch := ch; {
+		switch {
 		case ch == ' ':
 			l.next(1)
 			continue

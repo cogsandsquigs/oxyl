@@ -46,34 +46,6 @@ const (
 	EOF
 )
 
-// operators are separate because this allows for
-// custom operator functions to be added to types
-// inbuilt and otherwise
-type Operator Token
-
-const (
-	// operators, single caracters
-	DASH Operator = iota + Operator(EOF)
-	PLUS
-	SEMICOLON
-	SLASH
-	STAR
-
-	// operators (cont.), one or more characters
-	BANG
-	BANG_EQUAL
-	EQUAL
-	EQUAL_EQUAL
-	GREATER
-	GREATER_EQUAL
-	LESS
-	LESS_EQUAL
-	AMPERSAND
-	AND
-	PIPE
-	OR
-)
-
 // Returns the string representation of the token types.
 // Ex:
 //	FUN.String() // returns "fun"
@@ -109,4 +81,53 @@ func (t Token) String() string {
 
 func (t Token) Token() Token {
 	return t
+}
+
+// operators are separate because this allows for
+// custom operator functions to be added to types
+// inbuilt and otherwise
+type Operator Token
+
+const (
+	// operators, single caracters
+	DASH Operator = iota + Operator(EOF)
+	PLUS
+	SEMICOLON
+	SLASH
+	STAR
+	CARET
+	PERCENT
+	AMPERSAND
+	PIPE
+	GREATER
+	LESS
+	BANG
+	EQUAL
+
+	// operators (cont.), one or more characters
+	BANG_EQUAL
+	EQUAL_EQUAL
+	GREATER_EQUAL
+	LESS_EQUAL
+	AND
+	OR
+)
+
+// Returns the operator's precedence in binary expression parsing.
+// Ex: PLUS.Precedence() // returns 1
+func (o Operator) Precedence() int {
+	switch o {
+	case STAR, SLASH, PERCENT:
+		return 5
+	case PLUS, DASH:
+		return 4
+	case EQUAL_EQUAL, BANG_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL:
+		return 3
+	case AND:
+		return 2
+	case OR:
+		return 1
+	default:
+		return 0
+	}
 }
