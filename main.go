@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"oxyl/lexer"
+	"oxyl/types"
 )
 
 func main() {
@@ -27,4 +28,11 @@ func main() {
 	for _, tok := range toks {
 		fmt.Println(tok.String())
 	}
+
+	x := types.NewInt(1)
+
+	fmt.Println(x.Format())
+	x = types.NewInt(2)
+
+	fmt.Println(x.Format())
 }
