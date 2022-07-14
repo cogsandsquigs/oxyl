@@ -5,7 +5,7 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	lexer := New(`
+	lexer := NewLexer(`
 	fun main() {
 		println("hello world")
 

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	lexer := lexer.New(`
+	lexer := lexer.NewLexer(`
 	fun main() {
 		println("hello world")
 

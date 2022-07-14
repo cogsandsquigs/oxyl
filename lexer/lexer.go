@@ -18,7 +18,7 @@ type Lexer struct {
 	hadError bool   // errors we have encountered
 }
 
-func New(in string) *Lexer {
+func NewLexer(in string) *Lexer {
 	lexer := &Lexer{
 		in:       []rune(in),
 		line:     1,
