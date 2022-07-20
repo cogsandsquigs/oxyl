@@ -1,3 +1,7 @@
+pub mod token;
+
+use token::*;
+
 pub struct Lexer {
     input: String,
 }
@@ -9,7 +13,7 @@ impl Lexer {
         };
     }
 
-    pub fn lex(self) -> Vec<u8> {
-        unimplemented!();
+    pub fn lex(self) -> Vec<Token> {
+        return [Token::EOF].to_vec();
     }
 }
