@@ -1,6 +1,6 @@
 use crate::types::*;
 
-#[derive(Clone, PartialEq, PartialOrd, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum Token {
     // Illegal/unexpected/unknown token
     Illegal(char),
