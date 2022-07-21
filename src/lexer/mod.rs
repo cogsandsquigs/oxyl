@@ -88,64 +88,22 @@ impl Lexer {
                     }
                 }
 
-                // match against operators
+                // match against multi-character operators
+                '=' | '!' | '<' | '>' | '&' | '|' => {
+                    let op = Operator::from_chars(format!("{}{}", c, self.next(1)).as_str());
+
+                    if op.is_some() {
+                        tokens.push(Token::Operator(op.unwrap()));
+                    } else if c == '=' {
+                        tokens.push(Token::Assign);
+                    } else {
+                        tokens.push(Token::Operator(Operator::from_char(c).unwrap()));
+                    }
+                }
+
+                // match against single-character operators
                 '+' | '-' | '*' | '%' | '^' | '~' => {
                     tokens.push(Token::Operator(Operator::from_char(c).unwrap()));
-                }
-
-                // match against multi-character operators
-                '=' => {
-                    if self.peek(1) == '=' {
-                        tokens.push(Token::Operator(Operator::Eq));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Assign);
-                    }
-                }
-
-                '!' => {
-                    if self.peek(1) == '=' {
-                        tokens.push(Token::Operator(Operator::Neq));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Operator(Operator::Not));
-                    }
-                }
-
-                '<' => {
-                    if self.peek(1) == '=' {
-                        tokens.push(Token::Operator(Operator::Leq));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Operator(Operator::Lt));
-                    }
-                }
-
-                '>' => {
-                    if self.peek(1) == '=' {
-                        tokens.push(Token::Operator(Operator::Geq));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Operator(Operator::Gt));
-                    }
-                }
-
-                '&' => {
-                    if self.peek(1) == '&' {
-                        tokens.push(Token::Operator(Operator::And));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Operator(Operator::BitAnd));
-                    }
-                }
-
-                '|' => {
-                    if self.peek(1) == '|' {
-                        tokens.push(Token::Operator(Operator::Or));
-                        self.next(1);
-                    } else {
-                        tokens.push(Token::Operator(Operator::BitOr));
-                    }
                 }
 
                 // If the character is a number, return a literal token.
@@ -173,7 +131,7 @@ impl Lexer {
                 }
 
                 // If the character is unknown, return illegal token.
-                _ => {
+                c => {
                     self.report(format!("Illegal character: {}", c));
                     tokens.push(Token::Illegal(c)); // MAYBE: get rid of this, reduce memory usage?
                 }
@@ -248,8 +206,6 @@ impl Lexer {
         loop {
             let c = self.current();
 
-            println!("{}", c);
-
             if c.is_numeric() {
                 literal.push(c);
                 self.next(1);
@@ -258,16 +214,23 @@ impl Lexer {
             }
         }
 
+        let c = self.current();
+
+        if c == '.' {
+            literal.push(c);
+            self.next(1);
+        } else {
+            self.prev(1);
+        }
+
         loop {
             let c = self.current();
 
-            if c == '.' {
-                literal.push(c);
-                self.next(1);
-            } else if c.is_numeric() {
+            if c.is_numeric() {
                 literal.push(c);
                 self.next(1);
             } else {
+                self.prev(1);
                 break;
             }
         }
@@ -294,6 +257,15 @@ impl Lexer {
      */
     fn next(&mut self, n: usize) -> char {
         self.position += n;
+        return self.current();
+    }
+
+    /**
+     * Moves the position backward by n characters. Returns
+     * the character that was moved to.
+     */
+    fn prev(&mut self, n: usize) -> char {
+        self.position -= n;
         return self.current();
     }
 

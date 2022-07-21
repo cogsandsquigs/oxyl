@@ -124,4 +124,16 @@ impl Operator {
             _ => None,
         }
     }
+
+    pub fn from_chars(cs: &str) -> Option<Operator> {
+        match cs {
+            "==" => Some(Operator::Eq),
+            "!=" => Some(Operator::Neq),
+            "<" => Some(Operator::Lt),
+            ">" => Some(Operator::Gt),
+            "<=" => Some(Operator::Leq),
+            ">=" => Some(Operator::Geq),
+            _ => None,
+        }
+    }
 }
