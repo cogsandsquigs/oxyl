@@ -21,6 +21,9 @@ pub enum Token {
     While,
     Type,
 
+    // Assignment
+    Assign,
+
     // Identifiers and literals
     Ident(String),
     Literal(Type),
@@ -46,8 +49,8 @@ pub enum Operator {
     // Bitwise algebraic operators
     BitAnd,
     BitOr,
-    BitXor,
     BitNot,
+    BitXor,
     BitShl,
     BitShr,
 
