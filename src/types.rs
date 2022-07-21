@@ -66,9 +66,30 @@ mod tests {
         assert!(Type::same(Type::None, Type::None));
         assert!(!Type::same(Type::None, Type::Int(0)));
         assert!(Type::same(Type::Int(0), Type::Int(0)));
-        assert!(Type::same(Type::Int(0), Type::Int(0)));
-
-        assert!(!Type::same(Type::Int(0), Type::Float(0.0)));
+        assert!(Type::same(Type::Int(0), Type::Int(1)));
         assert!(Type::same(Type::Float(0.0), Type::Float(0.0)));
+        assert!(Type::same(Type::Float(0.0), Type::Float(0.1)));
+        assert!(Type::same(
+            Type::String("".into()),
+            Type::String("testing!".into())
+        ));
+        assert!(Type::same(Type::Bool(true), Type::Bool(false)));
+        assert!(Type::same(
+            Type::Array(Box::new(Type::Int(0)), vec![]),
+            Type::Array(Box::new(Type::Int(0)), vec![Type::Int(0)])
+        ));
+        assert!(!Type::same(
+            Type::Array(Box::new(Type::Int(0)), vec![]),
+            Type::Array(Box::new(Type::Float(0.0)), vec![])
+        ));
+        // test structs
+        assert!(Type::same(
+            Type::Struct("test", HashMap::from_iter(vec![("t", Type::Int(0))])),
+            Type::Struct("test", HashMap::from_iter(vec![("t", Type::Int(0))]))
+        ));
+        assert!(!Type::same(
+            Type::Struct("test", HashMap::from_iter(vec![("t", Type::Int(0))])),
+            Type::Struct("test", HashMap::from_iter(vec![("t", Type::Float(0.0))]))
+        ));
     }
 }
