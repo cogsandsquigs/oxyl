@@ -175,7 +175,7 @@ impl Lexer {
                 // If the character is unknown, return illegal token.
                 _ => {
                     self.report(format!("Illegal character: {}", c));
-                    tokens.push(Token::Illegal(c));
+                    tokens.push(Token::Illegal(c)); // MAYBE: get rid of this, reduce memory usage?
                 }
             }
 
