@@ -50,7 +50,7 @@ impl Lexer {
                 ' ' | '\t' => (),
 
                 // Match against single-character tokens.
-                '(' | ')' | '{' | '}' | '[' | ']' | ',' | '.' | ':' | '=' => {
+                '(' | ')' | '{' | '}' | '[' | ']' | ',' | '.' | ':' => {
                     tokens.push(Token::from_char(c).unwrap());
                 }
 
@@ -78,10 +78,6 @@ impl Lexer {
                     }
                 }
 
-                // match against operators
-                '+' => tokens.push(Token::Operator(Operator::Add)),
-                '-' => tokens.push(Token::Operator(Operator::Sub)),
-                '*' => tokens.push(Token::Operator(Operator::Mul)),
                 // If the character is a comment (either single-line //
                 // or multi-line /* */), return a comment token.
                 '/' => {
@@ -91,28 +87,26 @@ impl Lexer {
                         tokens.push(Token::Operator(Operator::Div));
                     }
                 }
-                '%' => tokens.push(Token::Operator(Operator::Mod)),
 
-                // Match against '&&' and '||'
-                '&' => {
-                    if self.peek(1) == '&' {
-                        tokens.push(Token::Operator(Operator::And));
-                    } else {
-                        tokens.push(Token::Illegal(c));
-                    }
+                // match against operators
+                '+' | '-' | '*' | '%' | '^' | '~' => {
+                    tokens.push(Token::Operator(Operator::from_char(c).unwrap()));
                 }
 
-                '|' => {
-                    if self.peek(1) == '|' {
-                        tokens.push(Token::Operator(Operator::Or));
+                // match against multi-character operators
+                '=' => {
+                    if self.peek(1) == '=' {
+                        tokens.push(Token::Operator(Operator::Eq));
+                        self.next(1);
                     } else {
-                        tokens.push(Token::Illegal(c));
+                        tokens.push(Token::Assign);
                     }
                 }
 
                 '!' => {
                     if self.peek(1) == '=' {
                         tokens.push(Token::Operator(Operator::Neq));
+                        self.next(1);
                     } else {
                         tokens.push(Token::Operator(Operator::Not));
                     }
@@ -121,6 +115,7 @@ impl Lexer {
                 '<' => {
                     if self.peek(1) == '=' {
                         tokens.push(Token::Operator(Operator::Leq));
+                        self.next(1);
                     } else {
                         tokens.push(Token::Operator(Operator::Lt));
                     }
@@ -129,8 +124,27 @@ impl Lexer {
                 '>' => {
                     if self.peek(1) == '=' {
                         tokens.push(Token::Operator(Operator::Geq));
+                        self.next(1);
                     } else {
                         tokens.push(Token::Operator(Operator::Gt));
+                    }
+                }
+
+                '&' => {
+                    if self.peek(1) == '&' {
+                        tokens.push(Token::Operator(Operator::And));
+                        self.next(1);
+                    } else {
+                        tokens.push(Token::Operator(Operator::BitAnd));
+                    }
+                }
+
+                '|' => {
+                    if self.peek(1) == '|' {
+                        tokens.push(Token::Operator(Operator::Or));
+                        self.next(1);
+                    } else {
+                        tokens.push(Token::Operator(Operator::BitOr));
                     }
                 }
 

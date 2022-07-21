@@ -105,3 +105,23 @@ pub enum Operator {
     Leq,
     Geq,
 }
+
+impl Operator {
+    pub fn from_char(c: char) -> Option<Operator> {
+        match c {
+            '+' => Some(Operator::Add),
+            '-' => Some(Operator::Sub),
+            '*' => Some(Operator::Mul),
+            '/' => Some(Operator::Div),
+            '%' => Some(Operator::Mod),
+            '&' => Some(Operator::BitAnd),
+            '|' => Some(Operator::BitOr),
+            '~' => Some(Operator::BitNot),
+            '^' => Some(Operator::BitXor),
+            '<' => Some(Operator::Lt),
+            '>' => Some(Operator::Gt),
+            '!' => Some(Operator::Not),
+            _ => None,
+        }
+    }
+}
