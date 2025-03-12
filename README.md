@@ -19,4 +19,4 @@ Run `make test` or `cargo test`
 
 ### Documentation
 
-Run `make doc`
+Run `make doc`. You can also run `make doc-open` to automatically open the documentation.
