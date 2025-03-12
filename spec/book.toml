@@ -1,0 +1,6 @@
+[book]
+    authors      = ["Ian Pratt"]
+    language     = "en"
+    multilingual = false
+    src          = "src"
+    title        = "The Oxyl Specification"
