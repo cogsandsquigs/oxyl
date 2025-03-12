@@ -1,5 +1,5 @@
 [book]
-    authors      = ["Ian Pratt"]
+    authors      = ["Ian Pratt <ianjdpratt@gmail.com>"]
     language     = "en"
     multilingual = false
     src          = "src"

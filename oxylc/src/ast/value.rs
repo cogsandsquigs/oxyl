@@ -34,4 +34,7 @@ impl AstNode for Value {
 pub enum ValueKind {
     /// An integer value, without any type determination.
     Integer(i64),
+
+    /// A boolean value.
+    Boolean(bool),
 }

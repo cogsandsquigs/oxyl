@@ -1,7 +1,7 @@
 use super::errors::ParserError;
 use crate::ast::value::{Value, ValueKind};
 use errgonomic::{
-    combinators::{any, decimal},
+    combinators::{any, decimal, is},
     parser::{errors::Result, input::Input, state::State, Parser},
 };
 
@@ -11,7 +11,7 @@ use errgonomic::{
 /// ```
 pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
     // TODO: More cases, this `any` is just here for now as a placeholder.
-    any((numeric,)).process(state)
+    any((numeric, boolean)).process(state)
 }
 
 /// Parses a numeric thing.
@@ -27,6 +27,25 @@ fn numeric(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> 
                 .parse::<i64>()
                 .expect("This should be only decimal digits!");
             Value::new(ValueKind::Integer(number), location)
+        })
+        .process(state)
+}
+
+/// Parses a boolean thing.
+/// ```bnf
+/// <boolean> ::= ( "True" | "False" )
+/// ```
+fn boolean(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
+    any((is("True"), is("False")))
+        .map(|parsed| {
+            Value::new(
+                ValueKind::Boolean(match parsed.as_inner() {
+                    "True" => true,
+                    "False" => false,
+                    _ => unreachable!(),
+                }),
+                parsed.span(),
+            )
         })
         .process(state)
 }
@@ -85,6 +104,21 @@ mod tests {
         let state = State::new(input);
         let result = numeric(state);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn can_parse_booleans() {
+        let input = "True";
+        let (state, parsed) = boolean.process(input.into()).unwrap();
+        assert_eq!(state.as_input(), &"");
+        assert_eq!(parsed.kind(), &ValueKind::Boolean(true));
+        assert!(state.is_ok());
+
+        let input = "False";
+        let (state, parsed) = boolean.process(input.into()).unwrap();
+        assert_eq!(state.as_input(), &"");
+        assert_eq!(parsed.kind(), &ValueKind::Boolean(false));
+        assert!(state.is_ok());
     }
 
     #[test]
