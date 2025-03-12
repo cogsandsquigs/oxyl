@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "errgonomic"
 version = "0.1.0"
-source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=8863b3d#8863b3dfbc8b114b240f262274e6aa2702216c0c"
+source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=24cde27f#24cde27f39d28745de27fc8922c2867c1478b042"
 dependencies = [
  "eval-macro",
 ]

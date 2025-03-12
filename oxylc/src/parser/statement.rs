@@ -1,7 +1,7 @@
 use super::{errors::ParserError, expression::expression, ident::ident, utils::line_ending};
 use crate::ast::statement::{Statement, StatementKind};
 use errgonomic::{
-    combinators::{any, is, maybe, whitespace_wrapped as ww},
+    combinators::{any, commit, is, maybe, whitespace_wrapped as ww},
     parser::{errors::Result, state::State, Parser},
 };
 
@@ -24,13 +24,17 @@ pub fn statement(state: State<&str, ParserError>) -> Result<&str, Statement, Par
 /// ```
 fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserError> {
     is("let")
-        .then(maybe(ww(is("mut"))))
-        .then(ww(ident))
-        .then(is("="))
-        .then(expression) // NOTE: alr. wrapped in whitespace
-        .then(line_ending)
+        // NOTE: commit on the rest of the statement, as we know we must parse a `let` statement
+        // now.
+        .then(commit(
+            maybe(ww(is("mut")))
+                .then(ww(ident))
+                .then(is("="))
+                .then(expression) // NOTE: alr. wrapped in whitespace
+                .then(line_ending),
+        ))
         .map_with_state(
-            |state, (((((let_kwd, is_mut), ident), _), expression), _)| {
+            |state, (let_kwd, ((((is_mut, ident), _), expression), _))| {
                 let location = let_kwd.span().union_between(state.as_input().span());
                 (
                     state,
