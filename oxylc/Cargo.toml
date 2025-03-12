@@ -1,0 +1,12 @@
+[package]
+    name              = "oxylc"
+    version           = "0.1.0"
+    description       = "The compiler for the Oxyl programming language."
+    edition.workspace = true
+    authors.workspace = true
+    license.workspace = true
+
+[dependencies]
+    thiserror  = "^2.0.12"
+    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "8863b3d" }
+
