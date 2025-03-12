@@ -23,3 +23,21 @@ pub fn ident(state: State<&str, ParserError>) -> Result<&str, Identifier, Parser
         })
         .process(state)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ast::AstNode;
+
+    #[test]
+    fn can_parse_ident() {
+        let input = "abc";
+        let state = State::new(input);
+        let result = ident(state);
+        assert!(result.is_ok());
+        let (state, ident) = result.unwrap();
+        assert_eq!(ident.name(), "abc");
+        assert_eq!(ident.location(), &(0..3).into());
+        assert_eq!(state.as_input().as_inner(), "");
+    }
+}

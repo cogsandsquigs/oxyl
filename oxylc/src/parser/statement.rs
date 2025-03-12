@@ -11,9 +11,9 @@ use errgonomic::{
 /// ```
 pub fn statement(state: State<&str, ParserError>) -> Result<&str, Statement, ParserError> {
     any((
-        ww(statement), // Statement wrapped in whitespace
-        // Actual "statements" start here
         let_stmt,
+        // NOTE: This must come last, because otherwise we recurse forever
+        ww(statement), // Statement wrapped in whitespace
     ))
     .process(state)
 }
@@ -50,4 +50,31 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
             },
         )
         .process(state)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ast::{
+        expression::{Expression, ExpressionKind},
+        identifier::Identifier,
+        value::{Value, ValueKind},
+    };
+
+    #[test]
+    fn can_parse_let_statement() {
+        let (state, stmt) = statement.process("let abc = 123\n".into()).unwrap();
+        assert_eq!(
+            stmt.kind(),
+            &StatementKind::Let {
+                is_mutable: false,
+                ident: Identifier::new("abc".into(), (4..7).into()),
+                expression: Expression::new(
+                    ExpressionKind::Value(Value::new(ValueKind::Integer(123), (10..13).into())),
+                    (10..13).into()
+                )
+            }
+        );
+        assert_eq!(state.as_input().as_inner(), "");
+    }
 }
