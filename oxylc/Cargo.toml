@@ -8,4 +8,4 @@
 
 [dependencies]
     thiserror  = "^2.0.12"
-    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "d89113c3a974eb7369309897568b268ea8dc7602" }
+    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "4117a68bdaf52cf37c8a37958362fa76ef835e5c" }

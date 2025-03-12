@@ -20,7 +20,7 @@ pub fn statement(state: State<&str, ParserError>) -> Result<&str, Statement, Par
 
 /// A `let`-statement.
 /// ```bnf
-/// <let_stmt> ::= "let" <ident> "=" <expression> ( NEWLINE | EOI )
+/// <let_stmt> ::= "let" <ident> "=" <expression> <line_ending>
 /// ```
 fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserError> {
     is("let")
