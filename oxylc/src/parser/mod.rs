@@ -21,5 +21,10 @@ use errors::ParserError;
 use statement::statement;
 
 pub fn parse(input: &str) -> Result<File, Error<&str, ParserError>> {
-    many(statement).map(File::new).parse(input)
+    many(statement)
+        .map_with_state(|state, stmts| {
+            let location = state.as_input().span().union_between((0..1).into());
+            (state, File::new(location, stmts))
+        })
+        .parse(input)
 }

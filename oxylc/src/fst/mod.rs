@@ -20,11 +20,30 @@ pub trait FstNode {
 }
 
 pub struct File {
+    /// The statements in the file.
     statements: Vec<Statement>,
+
+    /// The location of the file.
+    location: Span,
 }
 
 impl File {
-    pub fn new(statements: Vec<Statement>) -> Self {
-        Self { statements }
+    /// Creates a new `File` object.
+    pub fn new(location: Span, statements: Vec<Statement>) -> Self {
+        Self {
+            location,
+            statements,
+        }
+    }
+
+    /// Gets the statements in the file.
+    pub fn statements(&self) -> &[Statement] {
+        &self.statements
+    }
+}
+
+impl FstNode for File {
+    fn location(&self) -> &Span {
+        &self.location
     }
 }
