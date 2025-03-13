@@ -17,9 +17,10 @@ dependencies = [
 [[package]]
 name = "errgonomic"
 version = "0.1.0"
-source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=4117a68bdaf52cf37c8a37958362fa76ef835e5c#4117a68bdaf52cf37c8a37958362fa76ef835e5c"
+source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=d89113c3#d89113c3a974eb7369309897568b268ea8dc7602"
 dependencies = [
  "eval-macro",
+ "simdutf8",
 ]
 
 [[package]]
@@ -105,6 +106,12 @@ name = "semver"
 version = "1.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "56e6fa9c48d24d85fb3de5ad847117517440f6beceb7798af16b4a87d616b8d0"
+
+[[package]]
+name = "simdutf8"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
 
 [[package]]
 name = "syn"

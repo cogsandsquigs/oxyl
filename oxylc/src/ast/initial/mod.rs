@@ -1,12 +1,12 @@
-use errgonomic::parser::input::Span;
-use statement::Statement;
-
 pub mod block;
 pub mod expression;
 pub mod function;
 pub mod identifier;
 pub mod statement;
 pub mod value;
+
+use errgonomic::parser::input::Span;
+use statement::Statement;
 
 pub trait AstNode {
     /// Gets the location of the `AstNode`, as a `Span`.
