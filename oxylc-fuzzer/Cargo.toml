@@ -1,0 +1,11 @@
+[package]
+    name              = "oxylc-fuzzer"
+    version           = "0.1.0"
+    edition.workspace = true
+    authors.workspace = true
+    license.workspace = true
+
+[dependencies]
+    afl   = "^0.15.17"
+    oxylc = { path = "../oxylc" }
+

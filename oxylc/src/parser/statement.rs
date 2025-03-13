@@ -2,7 +2,7 @@ use super::{errors::ParserError, expression::expression, ident::ident, utils::li
 use crate::ast::statement::{Statement, StatementKind};
 use errgonomic::{
     combinators::{
-        any, commit, is, maybe, whitespace_not_newline_wrapped as wnnw, whitespace_wrapped as ww,
+        any, commit, is, whitespace_not_newline_wrapped as wnnw, whitespace_wrapped as ww,
     },
     parser::{errors::Result, state::State, Parser},
 };
@@ -26,28 +26,25 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
         // NOTE: commit on the rest of the statement, as we know we must parse a `let` statement
         // now.
         .then(commit(
-            maybe(wnnw(is("mut")))
-                .then(wnnw(ident))
+            wnnw(ident)
                 .then(ww(is("=")))
                 .then(expression) // NOTE: alr. wrapped in whitespace
                 .then(line_ending),
         ))
-        .map_with_state(
-            |state, (let_kwd, ((((is_mut, ident), _), expression), ending))| {
-                let location = let_kwd.span().union_between(ending.span());
-                (
-                    state,
-                    Statement::new(
-                        StatementKind::Let {
-                            is_mutable: is_mut.is_some(),
-                            ident,
-                            expression,
-                        },
-                        location,
-                    ),
-                )
-            },
-        )
+        .map_with_state(|state, (let_kwd, (((ident, _), expression), ending))| {
+            let location = let_kwd.span().union_between(ending.span());
+            (
+                state,
+                Statement::new(
+                    StatementKind::Let {
+                        is_mutable: false, // TODO: Mutability in the future?
+                        ident,
+                        expression,
+                    },
+                    location,
+                ),
+            )
+        })
         .process(state)
 }
 

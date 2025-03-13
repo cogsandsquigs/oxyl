@@ -1,6 +1,6 @@
 [workspace]
     resolver = "2"
-    members  = ["oxylc"]
+    members  = ["oxylc","oxylc-fuzzer"]
 
     [workspace.package]
         authors = ["Ian Pratt <ianjdpratt@gmail.com>"]

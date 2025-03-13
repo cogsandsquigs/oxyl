@@ -20,13 +20,13 @@ pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError
 /// ```
 fn numeric(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
     decimal
-        .map(|parsed: Input<&str>| {
+        .map_res(|parsed: Input<&str>| {
             let location = parsed.span();
             let number = parsed
                 .as_inner()
                 .parse::<i64>()
-                .expect("This should be only decimal digits!");
-            Value::new(ValueKind::Integer(number), location)
+                .map_err(ParserError::ParseIntError)?;
+            Ok(Value::new(ValueKind::Integer(number), location))
         })
         .process(state)
 }

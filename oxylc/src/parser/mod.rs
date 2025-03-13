@@ -19,6 +19,6 @@ pub mod errors;
 /// ```bnf
 /// <oxyl> ::= <statement>*
 /// ```
-pub fn parser(input: &str) -> Result<Ast, Error<&str, ParserError>> {
+pub fn parse(input: &str) -> Result<Ast, Error<&str, ParserError>> {
     many(statement).map(Ast::new).parse(input)
 }

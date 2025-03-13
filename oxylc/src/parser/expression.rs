@@ -13,18 +13,18 @@ use errgonomic::{
 /// <expression> ::= ( "(" <expression> ")" ) | <value>
 /// ```
 pub fn expression(state: State<&str, ParserError>) -> Result<&str, Expression, ParserError> {
+    // NOTE: Don't do `ww(expression)` in the `any`, as we simply recurse forever if we never
+    // encounter an expression. Therefore, `ww` every individual kind of expression
     any((
-        value.map(|value| {
+        wnnw(value.map(|value| {
             let location = *value.location();
             Expression::new(ExpressionKind::Value(value), location)
-        }),
-        block.map(|block| {
+        })),
+        wnnw(block.map(|block| {
             let location = *block.location();
             Expression::new(ExpressionKind::Block(block), location)
-        }),
-        parenthesized(expression), // Paren expression
-        // NOTE: This must come last, because otherwise we recurse forever
-        wnnw(expression), // Expression wrapped in whitespace
+        })),
+        wnnw(parenthesized(expression)), // Paren expression
     ))
     .process(state)
 }
