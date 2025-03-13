@@ -15,7 +15,10 @@ Run `make build` or `cargo build --release`
 
 ### Testing
 
-Run `make test` or `cargo test`
+Run `make test`. To fuzz, run `make fuzz`.
+
+> [!NOTE]
+> Fuzzing with `make fuzz` requires that `cargo-afl` is installed! If not, it will error out
 
 ### Documentation
 
