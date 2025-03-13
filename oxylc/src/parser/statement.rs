@@ -33,8 +33,8 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
                 .then(line_ending),
         ))
         .map_with_state(
-            |state, (let_kwd, ((((is_mut, ident), _), expression), _))| {
-                let location = let_kwd.span().union_between(state.as_input().span());
+            |state, (let_kwd, ((((is_mut, ident), _), expression), ending))| {
+                let location = let_kwd.span().union_between(ending.span());
                 (
                     state,
                     Statement::new(

@@ -1,15 +1,15 @@
 use super::errors::ParserError;
 use errgonomic::{
-    combinators::{any, commit, eoi, is, newlines},
-    parser::{errors::Result, state::State, Parser},
+    combinators::{any, commit, consumed, eoi, is, newlines},
+    parser::{errors::Result, input::Input, state::State, Parser},
 };
 
 /// A line ending
 /// ```bnf
 /// <line_ending> ::= ( NEWLINE | EOI )
 /// ```
-pub fn line_ending(state: State<&str, ParserError>) -> Result<&str, (), ParserError> {
-    any((newlines.map(|_| ()), eoi)).process(state)
+pub fn line_ending(state: State<&str, ParserError>) -> Result<&str, Input<&str>, ParserError> {
+    any((newlines, consumed(eoi))).process(state)
 }
 
 /// A parenthesized expression
