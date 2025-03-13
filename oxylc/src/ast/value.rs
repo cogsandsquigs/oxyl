@@ -30,11 +30,17 @@ impl AstNode for Value {
 }
 
 /// The kinds of values that can be in the AST.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ValueKind {
     /// An integer value, without any type determination.
     Integer(i64),
 
+    /// A floating-point value, without any type determination.
+    Floating(f64),
+
     /// A boolean value.
     Boolean(bool),
 }
+
+// NOTE: Have to do this b/c of `f64` not implementing `Eq`.
+impl Eq for ValueKind {}

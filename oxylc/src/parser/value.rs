@@ -1,7 +1,7 @@
 use super::errors::ParserError;
 use crate::ast::value::{Value, ValueKind};
 use errgonomic::{
-    combinators::{any, decimal, is},
+    combinators::{any, decimal, is, maybe},
     parser::{errors::Result, input::Input, state::State, Parser},
 };
 
@@ -11,7 +11,7 @@ use errgonomic::{
 /// ```
 pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
     // TODO: More cases, this `any` is just here for now as a placeholder.
-    any((numeric, boolean)).process(state)
+    any((floating, numeric, boolean)).process(state)
 }
 
 /// Parses a numeric thing.
@@ -25,8 +25,31 @@ fn numeric(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> 
             let number = parsed
                 .as_inner()
                 .parse::<i64>()
-                .map_err(ParserError::ParseIntError)?;
+                .map_err(ParserError::ParseInt)?;
             Ok(Value::new(ValueKind::Integer(number), location))
+        })
+        .process(state)
+}
+
+/// Parses a floating thing.
+/// ```bnf
+/// <numeric> ::= [0-9]+ "." [0-9]*
+/// ```
+fn floating(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
+    decimal
+        .then(is("."))
+        .then(maybe(decimal))
+        .map_res(|((n1_str, dot), n2_str)| {
+            let full = match n2_str {
+                Some(x) => n1_str.join(&dot).join(&x),
+                None => n1_str.join(&dot),
+            };
+            let location = full.span();
+            let number = full
+                .as_inner()
+                .parse::<f64>()
+                .map_err(ParserError::ParseFloat)?;
+            Ok(Value::new(ValueKind::Floating(number), location))
         })
         .process(state)
 }
@@ -118,6 +141,15 @@ mod tests {
         let (state, parsed) = boolean.process(input.into()).unwrap();
         assert_eq!(state.as_input(), &"");
         assert_eq!(parsed.kind(), &ValueKind::Boolean(false));
+        assert!(state.is_ok());
+    }
+
+    #[test]
+    fn can_parse_floating() {
+        let input = "123.456";
+        let (state, parsed) = floating.process(input.into()).unwrap();
+        assert_eq!(state.as_input(), &"");
+        assert_eq!(parsed.kind(), &ValueKind::Floating(123.456));
         assert!(state.is_ok());
     }
 

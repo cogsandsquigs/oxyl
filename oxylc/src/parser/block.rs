@@ -84,7 +84,7 @@ mod tests {
                         (10..11).into()
                     ),
                 },
-                (2..11).into()
+                (2..13).into()
             )]
         );
         assert_eq!(

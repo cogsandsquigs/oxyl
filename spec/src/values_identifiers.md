@@ -3,9 +3,10 @@
 > **<sup>Syntax:</sup>**\
 > _Value_:\
 > &emsp;`[0-9]+`\
+> &emsp;| `[0-9]+` `"."` `[0-9]*`\
 > &emsp;| ( `"True"` | `"False"` )
 
-Values can either be integers ~~, floats, strings~~, or booleans (NOTE: Those aren't implemented yet!)
+Values can either be integers, floats, ~~strings,~~ or booleans (NOTE: Those aren't implemented yet!)
 
 > **<sup>Syntax:</sup>**\
 > _Ident_:\
