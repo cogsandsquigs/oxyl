@@ -1,6 +1,7 @@
 use errgonomic::parser::input::Span;
 use statement::Statement;
 
+pub mod block;
 pub mod expression;
 pub mod identifier;
 pub mod statement;

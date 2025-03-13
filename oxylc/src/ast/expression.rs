@@ -1,4 +1,4 @@
-use super::{value::Value, AstNode};
+use super::{block::Block, value::Value, AstNode};
 use errgonomic::parser::input::Span;
 
 /// An expression.
@@ -33,4 +33,5 @@ impl AstNode for Expression {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionKind {
     Value(Value),
+    Block(Block),
 }

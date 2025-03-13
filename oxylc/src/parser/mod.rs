@@ -6,6 +6,7 @@ use errgonomic::{
 use errors::ParserError;
 use statement::statement;
 
+mod block;
 mod expression;
 mod ident;
 mod statement;
