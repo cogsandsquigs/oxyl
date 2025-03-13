@@ -1,5 +1,5 @@
 use super::{block::block, errors::ParserError, utils::parenthesized, utils::wnnw, value::value};
-use crate::ast::{
+use crate::ast::initial::{
     expression::{Expression, ExpressionKind},
     AstNode,
 };
@@ -32,7 +32,7 @@ pub fn expression(state: State<&str, ParserError>) -> Result<&str, Expression, P
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{
+    use crate::ast::initial::{
         block::Block,
         value::{Value, ValueKind},
     };

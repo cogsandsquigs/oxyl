@@ -1,6 +1,6 @@
 use super::errors::ParserError;
 use crate::{
-    ast::block::Block,
+    ast::initial::block::Block,
     parser::{expression::expression, statement::statement},
 };
 use errgonomic::{
@@ -33,7 +33,7 @@ pub fn block(state: State<&str, ParserError>) -> Result<&str, Block, ParserError
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{
+    use crate::ast::initial::{
         expression::{Expression, ExpressionKind},
         identifier::Identifier,
         statement::{Statement, StatementKind},

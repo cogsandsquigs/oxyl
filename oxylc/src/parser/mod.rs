@@ -1,4 +1,4 @@
-use crate::ast::Ast;
+use crate::ast::initial::Ast;
 use errgonomic::{
     combinators::many,
     parser::{errors::Error, Parser},

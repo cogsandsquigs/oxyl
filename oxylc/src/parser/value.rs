@@ -1,5 +1,5 @@
 use super::{errors::ParserError, functions::function, ident::ident};
-use crate::ast::{
+use crate::ast::initial::{
     value::{Value, ValueKind},
     AstNode,
 };

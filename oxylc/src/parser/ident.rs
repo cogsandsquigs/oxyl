@@ -1,5 +1,5 @@
 use super::errors::ParserError;
-use crate::ast::identifier::Identifier;
+use crate::ast::initial::identifier::Identifier;
 use errgonomic::{
     combinators::{alphabetic, alphanumeric, any, is, many},
     parser::{errors::Result, state::State, Parser},
@@ -27,7 +27,7 @@ pub fn ident(state: State<&str, ParserError>) -> Result<&str, Identifier, Parser
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::AstNode;
+    use crate::ast::initial::AstNode;
 
     #[test]
     fn can_parse_ident() {
