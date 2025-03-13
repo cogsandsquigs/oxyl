@@ -1,10 +1,10 @@
-use super::{block::block, errors::ParserError, utils::parenthesized, value::value};
+use super::{block::block, errors::ParserError, utils::parenthesized, utils::wnnw, value::value};
 use crate::ast::{
     expression::{Expression, ExpressionKind},
     AstNode,
 };
 use errgonomic::{
-    combinators::{any, whitespace_not_newline_wrapped as wnnw},
+    combinators::any,
     parser::{errors::Result, state::State, Parser},
 };
 

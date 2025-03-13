@@ -1,9 +1,12 @@
-use super::{errors::ParserError, expression::expression, ident::ident, utils::line_ending};
+use super::{
+    errors::ParserError,
+    expression::expression,
+    ident::ident,
+    utils::{line_ending, wnnw, ww},
+};
 use crate::ast::statement::{Statement, StatementKind};
 use errgonomic::{
-    combinators::{
-        any, commit, is, whitespace_not_newline_wrapped as wnnw, whitespace_wrapped as ww,
-    },
+    combinators::{any, commit, is},
     parser::{errors::Result, state::State, Parser},
 };
 
