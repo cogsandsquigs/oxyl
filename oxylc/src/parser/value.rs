@@ -1,4 +1,4 @@
-use super::{errors::ParserError, /*functions::function,*/ ident::ident};
+use super::{errors::ParserError, functions::function, ident::ident};
 use crate::fst::{
     value::{Value, ValueKind},
     FstNode,
@@ -19,10 +19,7 @@ pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError
         numeric,
         boolean,
         ident.map(|i| Value::new(*i.location(), ValueKind::Identifier(i))),
-        /*function.map(|f| {
-            let location = *f.location();
-            Value::new(ValueKind::Function(f), location)
-        }),*/
+        function.map(|f| Value::new(*f.location(), ValueKind::Function(f))),
     ))
     .process(state)
 }

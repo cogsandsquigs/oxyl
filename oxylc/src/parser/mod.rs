@@ -5,6 +5,7 @@
 mod block;
 mod comments;
 mod expression;
+mod functions;
 mod ident;
 mod statement;
 mod utils;

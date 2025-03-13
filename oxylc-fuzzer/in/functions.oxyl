@@ -1,3 +1,5 @@
+let empty = \. 12.34
+
 let f = \x. 3
 let g = \y. y
 

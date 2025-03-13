@@ -1,4 +1,4 @@
-use super::{/*function::Function*/ identifier::Identifier, FstNode};
+use super::{/*function::Function*/ function::Function, identifier::Identifier, FstNode};
 use errgonomic::parser::input::Span;
 
 /// A value in the AST.
@@ -43,8 +43,9 @@ pub enum ValueKind {
 
     /// An identifier.
     Identifier(Identifier),
-    // /// A function.
-    // Function(Function),
+
+    /// A function.
+    Function(Function),
 }
 
 // NOTE: Have to do this b/c of `f64` not implementing `Eq`.

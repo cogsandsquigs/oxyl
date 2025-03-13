@@ -17,7 +17,7 @@ dependencies = [
 [[package]]
 name = "errgonomic"
 version = "0.1.0"
-source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=d89113c3#d89113c3a974eb7369309897568b268ea8dc7602"
+source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=064f7420#064f74200876d42535fae414af4aa25116857605"
 dependencies = [
  "eval-macro",
  "simdutf8",
