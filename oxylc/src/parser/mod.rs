@@ -8,6 +8,7 @@ use statement::statement;
 
 mod block;
 mod expression;
+mod functions;
 mod ident;
 mod statement;
 mod utils;

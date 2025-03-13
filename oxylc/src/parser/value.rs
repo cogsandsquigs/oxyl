@@ -1,5 +1,8 @@
-use super::errors::ParserError;
-use crate::ast::value::{Value, ValueKind};
+use super::{errors::ParserError, functions::function, ident::ident};
+use crate::ast::{
+    value::{Value, ValueKind},
+    AstNode,
+};
 use errgonomic::{
     combinators::{any, decimal, is, maybe},
     parser::{errors::Result, input::Input, state::State, Parser},
@@ -11,7 +14,20 @@ use errgonomic::{
 /// ```
 pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> {
     // TODO: More cases, this `any` is just here for now as a placeholder.
-    any((floating, numeric, boolean)).process(state)
+    any((
+        floating,
+        numeric,
+        boolean,
+        ident.map(|i| {
+            let location = *i.location();
+            Value::new(ValueKind::Identifier(i), location)
+        }),
+        function.map(|f| {
+            let location = *f.location();
+            Value::new(ValueKind::Function(f), location)
+        }),
+    ))
+    .process(state)
 }
 
 /// Parses a numeric thing.
@@ -166,7 +182,7 @@ mod tests {
         assert!(matches!(parsed_value.kind(), ValueKind::Integer(123)));
 
         // Test value parser with non-value input
-        let input = "abc";
+        let input = "!_abc";
         let state = State::new(input);
         let result = value(state);
         assert!(result.is_err());

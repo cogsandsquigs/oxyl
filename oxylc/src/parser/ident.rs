@@ -7,10 +7,10 @@ use errgonomic::{
 
 /// Parses an ident.
 /// ```bnf
-/// <ident> ::= [a-zA-Z] ( [a-zA-Z0-9] | "_" )*
+/// <ident> ::= ( [a-zA-Z] | "_" ) ( [a-zA-Z0-9] | "_" )*
 /// ```
 pub fn ident(state: State<&str, ParserError>) -> Result<&str, Identifier, ParserError> {
-    alphabetic
+    any((alphabetic, is("_")))
         .then(many(any((alphanumeric, is("_")))))
         .map(|(part1, part2s)| {
             let part2 = part2s.into_iter().reduce(|acc, x| acc.join(&x));

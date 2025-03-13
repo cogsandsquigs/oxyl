@@ -1,4 +1,4 @@
-use super::AstNode;
+use super::{function::Function, identifier::Identifier, AstNode};
 use errgonomic::parser::input::Span;
 
 /// A value in the AST.
@@ -40,6 +40,11 @@ pub enum ValueKind {
 
     /// A boolean value.
     Boolean(bool),
+
+    /// An identifier.
+    Identifier(Identifier),
+    /// A function.
+    Function(Function),
 }
 
 // NOTE: Have to do this b/c of `f64` not implementing `Eq`.
