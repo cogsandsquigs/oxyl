@@ -4,7 +4,7 @@ use super::{
     ident::ident,
     utils::{line_ending, wnnw, ww},
 };
-use crate::fst::statement::{Statement, StatementKind};
+use crate::ast::initial::statement::{Statement, StatementKind};
 use errgonomic::{
     combinators::{any, commit, is},
     parser::{errors::Result, state::State, Parser},
@@ -39,12 +39,12 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
             (
                 state,
                 Statement::new(
-                    location,
                     StatementKind::Let {
                         is_mutable: false, // TODO: Mutability in the future?
                         ident,
                         expression,
                     },
+                    location,
                 ),
             )
         })
@@ -54,7 +54,7 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fst::{
+    use crate::ast::initial::{
         expression::{Expression, ExpressionKind},
         identifier::Identifier,
         value::{Value, ValueKind},
@@ -67,10 +67,10 @@ mod tests {
             stmt.kind(),
             &StatementKind::Let {
                 is_mutable: false,
-                ident: Identifier::new((4..7).into(), "abc".into(),),
+                ident: Identifier::new("abc".into(), (4..7).into()),
                 expression: Expression::new(
-                    (10..13).into(),
-                    ExpressionKind::Value(Value::new((10..13).into(), ValueKind::Integer(123),)),
+                    ExpressionKind::Value(Value::new(ValueKind::Integer(123), (10..13).into())),
+                    (10..13).into()
                 )
             }
         );

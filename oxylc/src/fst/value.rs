@@ -1,4 +1,4 @@
-use super::{/*function::Function*/ comment::Comment, identifier::Identifier, FstNode};
+use super::{/*function::Function*/ identifier::Identifier, FstNode};
 use errgonomic::parser::input::Span;
 
 /// A value in the AST.
@@ -13,7 +13,7 @@ pub struct Value {
 
 impl Value {
     /// Creates a new `Value` object.
-    pub fn new(kind: ValueKind, location: Span) -> Self {
+    pub fn new(location: Span, kind: ValueKind) -> Self {
         Self { kind, location }
     }
 
@@ -26,10 +26,6 @@ impl Value {
 impl FstNode for Value {
     fn location(&self) -> &Span {
         &self.location
-    }
-
-    fn comments(&self) -> &[Comment] {
-        &[]
     }
 }
 

@@ -1,4 +1,4 @@
-use super::{expression::Expression, statement::Statement, AstNode};
+use super::{expression::Expression, statement::Statement, FstNode};
 use errgonomic::parser::input::Span;
 
 /// An expression.
@@ -11,7 +11,7 @@ pub struct Block {
 
 impl Block {
     /// Creates a new `Block` object.
-    pub fn new(statements: Vec<Statement>, expression: Box<Expression>, location: Span) -> Self {
+    pub fn new(location: Span, statements: Vec<Statement>, expression: Box<Expression>) -> Self {
         Self {
             location,
             statements,
@@ -30,7 +30,7 @@ impl Block {
     }
 }
 
-impl AstNode for Block {
+impl FstNode for Block {
     fn location(&self) -> &Span {
         &self.location
     }

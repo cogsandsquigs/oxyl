@@ -1,4 +1,4 @@
-use super::{comment::Comment, FstNode};
+use super::FstNode;
 use errgonomic::parser::input::Span;
 
 /// An identifier.
@@ -13,7 +13,7 @@ pub struct Identifier {
 
 impl Identifier {
     /// Creates a new `Identifier` object.
-    pub fn new(name: String, location: Span) -> Self {
+    pub fn new(location: Span, name: String) -> Self {
         Self { name, location }
     }
 
@@ -26,9 +26,5 @@ impl Identifier {
 impl FstNode for Identifier {
     fn location(&self) -> &Span {
         &self.location
-    }
-
-    fn comments(&self) -> &[Comment] {
-        &[]
     }
 }

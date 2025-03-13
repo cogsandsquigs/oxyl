@@ -1,4 +1,4 @@
-use super::{expression::Expression, identifier::Identifier, AstNode};
+use super::{expression::Expression, identifier::Identifier, FstNode};
 use errgonomic::parser::input::Span;
 
 /// An expression.
@@ -13,7 +13,7 @@ pub struct Statement {
 
 impl Statement {
     /// Creates a new `Expression` object.
-    pub fn new(kind: StatementKind, location: Span) -> Self {
+    pub fn new(location: Span, kind: StatementKind) -> Self {
         Self { kind, location }
     }
 
@@ -23,7 +23,7 @@ impl Statement {
     }
 }
 
-impl AstNode for Statement {
+impl FstNode for Statement {
     fn location(&self) -> &Span {
         &self.location
     }
@@ -32,6 +32,7 @@ impl AstNode for Statement {
 /// The kinds of statements we can have.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum StatementKind {
+    /// A `let`-statement, representing assignment.
     Let {
         is_mutable: bool,
         ident: Identifier,

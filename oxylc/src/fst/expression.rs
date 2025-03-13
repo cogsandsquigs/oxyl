@@ -1,4 +1,4 @@
-use super::{/*block::Block*/ comment::Comment, value::Value, FstNode};
+use super::{block::Block, value::Value, FstNode};
 use errgonomic::parser::input::Span;
 
 /// An expression.
@@ -13,8 +13,7 @@ pub struct Expression {
 
 impl Expression {
     /// Creates a new `Expression` object.
-    pub fn new(kind: ExpressionKind, location: Span) -> Self {
-        todo!("add comments!");
+    pub fn new(location: Span, kind: ExpressionKind) -> Self {
         Self { kind, location }
     }
 
@@ -28,15 +27,21 @@ impl FstNode for Expression {
     fn location(&self) -> &Span {
         &self.location
     }
-
-    fn comments(&self) -> &[Comment] {
-        todo!()
-    }
 }
 
 /// The kinds of expressions we can have.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionKind {
+    /// A parenthesized expression
+    Parenthesized {
+        lparen_location: Span,
+        rparen_location: Span,
+        inner: Box<Expression>,
+    },
+
+    /// A value
     Value(Value),
-    // Block(Block),
+
+    /// A block
+    Block(Block),
 }

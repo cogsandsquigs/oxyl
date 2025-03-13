@@ -1,6 +1,6 @@
 use super::errors::ParserError;
 use crate::{
-    fst::block::Block,
+    ast::initial::block::Block,
     parser::{expression::expression, statement::statement},
 };
 use errgonomic::{
@@ -24,7 +24,7 @@ pub fn block(state: State<&str, ParserError>) -> Result<&str, Block, ParserError
             let location = state.as_input().span().union_between(open_curly.span());
             (
                 state,
-                Block::new(location, statements, Box::new(expression)),
+                Block::new(statements, Box::new(expression), location),
             )
         })
         .process(state)
@@ -33,12 +33,12 @@ pub fn block(state: State<&str, ParserError>) -> Result<&str, Block, ParserError
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fst::{
+    use crate::ast::initial::{
         expression::{Expression, ExpressionKind},
         identifier::Identifier,
         statement::{Statement, StatementKind},
         value::{Value, ValueKind},
-        FstNode,
+        AstNode,
     };
     use errgonomic::parser::input::Span;
 
@@ -50,12 +50,12 @@ mod tests {
         assert_eq!(
             expr,
             Block::new(
-                (0..7).into(),
                 vec![],
                 Box::new(Expression::new(
-                    (2..5).into(),
-                    ExpressionKind::Value(Value::new((2..5).into(), ValueKind::Integer(123),)),
+                    ExpressionKind::Value(Value::new(ValueKind::Integer(123), (2..5).into())),
+                    (2..5).into()
                 )),
+                (0..7).into()
             )
         );
     }
@@ -76,22 +76,22 @@ mod tests {
         assert_eq!(
             expr.statements(),
             &[Statement::new(
-                (2..13).into(),
                 StatementKind::Let {
                     is_mutable: false,
-                    ident: Identifier::new((6..7).into(), "x".into()),
+                    ident: Identifier::new("x".into(), (6..7).into()),
                     expression: Expression::new(
-                        (10..11).into(),
-                        ExpressionKind::Value(Value::new((10..11).into(), ValueKind::Integer(3))),
+                        ExpressionKind::Value(Value::new(ValueKind::Integer(3), (10..11).into())),
+                        (10..11).into()
                     ),
                 },
+                (2..13).into()
             )]
         );
         assert_eq!(
             expr.expression(),
             &Expression::new(
-                (28..31).into(),
-                ExpressionKind::Value(Value::new((28..31).into(), ValueKind::Integer(123))),
+                ExpressionKind::Value(Value::new(ValueKind::Integer(123), (28..31).into())),
+                (28..31).into()
             )
         );
     }

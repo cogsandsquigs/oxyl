@@ -1,20 +1,19 @@
-use super::{expression::Expression, identifier::Identifier, AstNode};
+use super::{expression::Expression, identifier::Identifier, FstNode};
 use errgonomic::parser::input::Span;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Function {
+    location: Span,
     args: Vec<Identifier>,
     expression: Box<Expression>,
-
-    location: Span,
 }
 
 impl Function {
-    pub fn new(args: Vec<Identifier>, expression: Expression, location: Span) -> Self {
+    pub fn new(location: Span, args: Vec<Identifier>, expression: Expression) -> Self {
         Self {
+            location,
             args,
             expression: Box::new(expression),
-            location,
         }
     }
 
@@ -27,7 +26,7 @@ impl Function {
     }
 }
 
-impl AstNode for Function {
+impl FstNode for Function {
     fn location(&self) -> &Span {
         &self.location
     }

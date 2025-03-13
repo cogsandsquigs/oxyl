@@ -1,7 +1,7 @@
-use super::{errors::ParserError, functions::function, ident::ident};
-use crate::ast::initial::{
+use super::{errors::ParserError, /*functions::function,*/ ident::ident};
+use crate::fst::{
     value::{Value, ValueKind},
-    AstNode,
+    FstNode,
 };
 use errgonomic::{
     combinators::{any, decimal, is, maybe},
@@ -18,14 +18,11 @@ pub fn value(state: State<&str, ParserError>) -> Result<&str, Value, ParserError
         floating,
         numeric,
         boolean,
-        ident.map(|i| {
-            let location = *i.location();
-            Value::new(ValueKind::Identifier(i), location)
-        }),
-        function.map(|f| {
+        ident.map(|i| Value::new(*i.location(), ValueKind::Identifier(i))),
+        /*function.map(|f| {
             let location = *f.location();
             Value::new(ValueKind::Function(f), location)
-        }),
+        }),*/
     ))
     .process(state)
 }
@@ -42,7 +39,7 @@ fn numeric(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> 
                 .as_inner()
                 .parse::<i64>()
                 .map_err(ParserError::ParseInt)?;
-            Ok(Value::new(ValueKind::Integer(number), location))
+            Ok(Value::new(location, ValueKind::Integer(number)))
         })
         .process(state)
 }
@@ -65,7 +62,7 @@ fn floating(state: State<&str, ParserError>) -> Result<&str, Value, ParserError>
                 .as_inner()
                 .parse::<f64>()
                 .map_err(ParserError::ParseFloat)?;
-            Ok(Value::new(ValueKind::Floating(number), location))
+            Ok(Value::new(location, ValueKind::Floating(number)))
         })
         .process(state)
 }
@@ -78,12 +75,12 @@ fn boolean(state: State<&str, ParserError>) -> Result<&str, Value, ParserError> 
     any((is("True"), is("False")))
         .map(|parsed| {
             Value::new(
+                parsed.span(),
                 ValueKind::Boolean(match parsed.as_inner() {
                     "True" => true,
                     "False" => false,
                     _ => unreachable!(),
                 }),
-                parsed.span(),
             )
         })
         .process(state)
