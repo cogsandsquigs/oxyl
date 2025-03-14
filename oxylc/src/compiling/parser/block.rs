@@ -1,8 +1,5 @@
-use super::errors::ParserError;
-use crate::{
-    fst::block::Block,
-    parser::{expression::expression, statement::statement},
-};
+use super::{errors::ParserError, expression::expression, statement::statement};
+use crate::fst::block::Block;
 use errgonomic::{
     combinators::{commit, is, many, maybe, whitespace},
     parser::{errors::Result, state::State, Parser},

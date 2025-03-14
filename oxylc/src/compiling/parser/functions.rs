@@ -1,5 +1,5 @@
-use super::{errors::ParserError, expression::expression, utils::ww};
-use crate::{fst::function::Function, parser::ident::ident};
+use super::{errors::ParserError, expression::expression, ident::ident, utils::ww};
+use crate::fst::function::Function;
 use errgonomic::{
     combinators::{is, separated},
     parser::{errors::Result, state::State, Parser},
