@@ -1,7 +1,7 @@
 use super::{comments::comment, errors::ParserError};
 use errgonomic::{
     combinators::{
-        any, between, commit, consumed, eoi, is, newlines, whitespace, whitespace_not_newline,
+        any, between, commit, consumed, eoi, is, many, newlines, whitespace, whitespace_not_newline,
     },
     parser::{errors::Result, input::Input, state::State, Parser},
 };
@@ -29,7 +29,11 @@ pub fn parenthesized<'a, O, P: Parser<&'a str, O, ParserError>>(
 
 /// Shorthand for our modified `whitespace_wrapped`, but includes comments
 pub fn ww<'a, O, P: Parser<&'a str, O, ParserError>>(p: P) -> impl Parser<&'a str, O, ParserError> {
-    between(any((comment, whitespace)), p, any((comment, whitespace)))
+    between(
+        many(any((comment, whitespace))),
+        p,
+        many(any((comment, whitespace))),
+    )
 }
 
 /// Shorthand for our modified `whitespace_not_newline_wrapped`, but includes comments
@@ -37,8 +41,52 @@ pub fn wnnw<'a, O, P: Parser<&'a str, O, ParserError>>(
     p: P,
 ) -> impl Parser<&'a str, O, ParserError> {
     between(
-        any((comment, whitespace_not_newline)),
+        many(any((comment, whitespace_not_newline))),
         p,
-        any((comment, whitespace_not_newline)),
+        many(any((comment, whitespace_not_newline))),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use errgonomic::parser::errors::{Error, ErrorKind, ExpectedError};
+
+    use super::*;
+
+    #[test]
+    fn can_parse_line_end() {
+        let (state, parsed) = line_ending.process("\n".into()).unwrap();
+        assert_eq!(parsed.as_inner(), "\n");
+        assert!(state.is_ok());
+        assert_eq!(state.as_input().as_inner(), "");
+
+        let (state, parsed) = line_ending.process("".into()).unwrap();
+        assert_eq!(parsed.as_inner(), "");
+        assert!(state.is_ok());
+        assert_eq!(state.as_input().as_inner(), "");
+
+        let (state, parsed) = line_ending.process("\r\n".into()).unwrap();
+        assert_eq!(parsed.as_inner(), "\r\n");
+        assert!(state.is_ok());
+        assert_eq!(state.as_input().as_inner(), "");
+
+        let state = line_ending.process("test".into()).unwrap_err();
+        assert_eq!(state.as_input().as_inner(), "test");
+        assert_eq!(
+            state.errors(),
+            &Error::new(
+                ErrorKind::all(vec![
+                    Error::new(
+                        ErrorKind::expected(ExpectedError::Newlines),
+                        Input::new_with_span("test", 0..1)
+                    ),
+                    Error::new(
+                        ErrorKind::expected(ExpectedError::Nothing),
+                        Input::new_with_span("test", 0..4)
+                    )
+                ]),
+                Input::new_with_span("test", 0..4)
+            )
+        );
+    }
 }
