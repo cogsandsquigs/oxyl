@@ -33,6 +33,18 @@ mod tests {
         assert_eq!(parsed.as_inner(), "// hello");
         assert!(state.is_ok());
         assert_eq!(state.as_input().as_inner(), "");
+
+        let (state, parsed) = single_line_comment.process("// hello   \n".into()).unwrap();
+        assert_eq!(parsed.as_inner(), "// hello   \n");
+        assert!(state.is_ok());
+        assert_eq!(state.as_input().as_inner(), "");
+
+        let (state, parsed) = single_line_comment
+            .process("// hello   \n\n".into())
+            .unwrap();
+        assert_eq!(parsed.as_inner(), "// hello   \n\n");
+        assert!(state.is_ok());
+        assert_eq!(state.as_input().as_inner(), "");
     }
 
     #[test]
