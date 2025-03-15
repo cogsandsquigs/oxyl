@@ -1,5 +1,5 @@
 use afl::fuzz;
-use oxylc::compiling::parser;
+use oxylc::compile::parser;
 
 fn main() {
     fuzz!(|data: &[u8]| {

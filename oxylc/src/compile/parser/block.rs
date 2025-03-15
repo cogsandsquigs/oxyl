@@ -1,7 +1,7 @@
-use super::{errors::ParserError, expression::expression, statement::statement};
+use super::{errors::ParserError, expression::expression, statement::statement, utils::ww};
 use crate::fst::block::Block;
 use errgonomic::{
-    combinators::{commit, is, many, maybe, whitespace},
+    combinators::{commit, is, many},
     parser::{errors::Result, state::State, Parser},
 };
 
@@ -11,13 +11,8 @@ use errgonomic::{
 /// ```
 pub fn block(state: State<&str, ParserError>) -> Result<&str, Block, ParserError> {
     is("{")
-        .then(commit(
-            many(statement)
-                .then(expression)
-                .then(maybe(whitespace))
-                .then(is("}")),
-        ))
-        .map_with_state(|state, (open_curly, (((statements, expression), _), _))| {
+        .then(commit(many(statement).then(ww(expression)).then(is("}"))))
+        .map_with_state(|state, (open_curly, ((statements, expression), _))| {
             let location = state.as_input().span().union_between(open_curly.span());
             (
                 state,

@@ -10,6 +10,7 @@ pub mod function;
 pub mod identifier;
 pub mod statement;
 pub mod value;
+pub mod visitor;
 
 use errgonomic::parser::input::Span;
 use statement::Statement;
@@ -19,6 +20,7 @@ pub trait FstNode {
     fn location(&self) -> &Span;
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct File {
     /// The statements in the file.
     statements: Vec<Statement>,
