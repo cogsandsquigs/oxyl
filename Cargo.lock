@@ -119,7 +119,7 @@ checksum = "5b63caa9aa9397e2d9480a9b13673856c78d8ac123288526c37d7839f2a86990"
 [[package]]
 name = "errgonomic"
 version = "0.1.0"
-source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=5efbdfa6#5efbdfa6036f31c3625a363149c72a1e3494deb4"
+source = "git+https://github.com/cogsandsquigs/errgonomic.git?rev=404b5faf#404b5faf396fd9b553e880c85f439a2e5641a325"
 dependencies = [
  "eval-macro",
  "simdutf8",
