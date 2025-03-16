@@ -1,0 +1,6 @@
+let x = 1 + 2
+let y = -8
+
+let main = \. {
+    x * y
+}

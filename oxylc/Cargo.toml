@@ -11,13 +11,7 @@
     errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "239b0088", features = [
         "unicode",
     ] }
-    clap = { version = "^4.5.32", features = ["derive"] }
-    anyhow = "^1.0.97"
 
 [lib]
     name = "oxylc"
     path = "src/lib.rs"
-
-[[bin]]
-    name = "oxylc"
-    path = "src/main.rs"
