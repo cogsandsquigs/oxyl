@@ -117,9 +117,9 @@ fn can_parse_triangle_and_dot() {
 fn can_parse_triangle() {
     let (state, actual) = expression.process("a |> b |> c".into()).unwrap();
     let expected = Expression::new(
-        (0..8).into(),
+        (0..11).into(),
         ExpressionKind::Infix {
-            operator: Operator::new((4..6).into(), OperatorKind::Triangle),
+            operator: Operator::new((2..4).into(), OperatorKind::Triangle),
             lhs: Box::new(Expression::new(
                 (0..1).into(),
                 ExpressionKind::Value(Value::new(
@@ -128,21 +128,21 @@ fn can_parse_triangle() {
                 )),
             )),
             rhs: Box::new(Expression::new(
-                (0..3).into(),
+                (5..11).into(),
                 ExpressionKind::Infix {
-                    operator: Operator::new((1..2).into(), OperatorKind::Dot),
+                    operator: Operator::new((7..9).into(), OperatorKind::Triangle),
                     lhs: Box::new(Expression::new(
-                        (0..1).into(),
+                        (5..6).into(),
                         ExpressionKind::Value(Value::new(
-                            (0..1).into(),
-                            ValueKind::Identifier(Identifier::new((0..1).into(), "a".into())),
+                            (5..6).into(),
+                            ValueKind::Identifier(Identifier::new((5..6).into(), "b".into())),
                         )),
                     )),
                     rhs: Box::new(Expression::new(
-                        (2..3).into(),
+                        (10..11).into(),
                         ExpressionKind::Value(Value::new(
-                            (2..3).into(),
-                            ValueKind::Identifier(Identifier::new((2..3).into(), "b".into())),
+                            (10..11).into(),
+                            ValueKind::Identifier(Identifier::new((10..11).into(), "c".into())),
                         )),
                     )),
                 },

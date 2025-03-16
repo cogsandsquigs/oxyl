@@ -7,12 +7,12 @@ use errgonomic::{
 
 /// Parses a `Function` object.
 /// ```bnf
-/// <function> ::= "\" (<ident> ",")* <ident>? ","? "." <expression>
+/// <function> ::= "|" (<ident> ",")* <ident>? ","? "|" <expression>
 /// ```
 pub fn function(state: State<&str, ParserError>) -> Result<&str, Function, ParserError> {
-    is("\\")
+    is("|")
         .then(separated(ww(ident), is(","), true))
-        .then(ww(is(".")))
+        .then(ww(is("|")))
         .then(ww(expression))
         .map_with_state(|state, (((start, idents), _), expression)| {
             let location = start.span().union_between(state.as_input().span());
@@ -32,7 +32,7 @@ mod tests {
 
     #[test]
     fn can_parse_fn_no_arg() {
-        let (state, parsed) = function.process("\\   \n\r\n. 123 \n".into()).unwrap();
+        let (state, parsed) = function.process("|   \n\r\n| 123 \n".into()).unwrap();
         assert!(state.is_ok());
         assert_eq!(state.as_input().as_inner(), "");
         assert_eq!(
@@ -50,7 +50,7 @@ mod tests {
 
     #[test]
     fn can_parse_fn_single_arg() {
-        let (state, parsed) = function.process("\\  x \n\n. 123 \n".into()).unwrap();
+        let (state, parsed) = function.process("|  x \n\n| 123 \n".into()).unwrap();
         assert!(state.is_ok());
         assert_eq!(state.as_input().as_inner(), "");
         assert_eq!(
@@ -69,7 +69,7 @@ mod tests {
     #[test]
     fn can_parse_fn_mutli_arg() {
         let (state, parsed) = function
-            .process("\\  x ,\n\t\r\ny_1\n\n. 123 \n".into())
+            .process("|  x ,\n\t\r\ny_1\n\n| 123 \n".into())
             .unwrap();
         assert!(state.is_ok());
         assert_eq!(state.as_input().as_inner(), "");
