@@ -4,11 +4,11 @@ use errgonomic::parser::input::Span;
 /// An expression.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Expression {
-    /// The type of expression it is.
-    kind: ExpressionKind,
-
     /// The location where the value was found.
     location: Span,
+
+    /// The type of expression it is.
+    kind: ExpressionKind,
 }
 
 impl Expression {
@@ -44,4 +44,70 @@ pub enum ExpressionKind {
 
     /// A block
     Block(Block),
+
+    /// An infix expression.
+    Infix {
+        operator: Operator,
+        lhs: Box<Expression>,
+        rhs: Box<Expression>,
+    },
+
+    /// A prefix expression.
+    Prefix {
+        operator: Operator,
+        rhs: Box<Expression>,
+    },
+
+    /// A postfix expression.
+    Postfix {
+        operator: Operator,
+        lhs: Box<Expression>,
+    },
+}
+
+/// The operator that we found.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub struct Operator {
+    location: Span,
+    kind: OperatorKind,
+}
+
+impl Operator {
+    /// Creates a new operator.
+    pub fn new(location: Span, kind: OperatorKind) -> Self {
+        Self { location, kind }
+    }
+
+    /// Gets the kind of operator it is.
+    pub fn kind(&self) -> OperatorKind {
+        self.kind
+    }
+}
+
+impl FstNode for Operator {
+    fn location(&self) -> &Span {
+        &self.location
+    }
+}
+
+/// Operators we can have
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum OperatorKind {
+    /// The `+`
+    Plus,
+
+    /// The `-`
+    Dash,
+
+    /// The `*`
+    Star,
+
+    /// The `/`
+    FSlash,
+
+    /// The `|>`
+    Triangle,
+
+    /// The `.`
+    Dot,
 }

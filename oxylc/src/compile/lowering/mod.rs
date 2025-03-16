@@ -42,6 +42,7 @@ impl FstVisitor<String> for CLowerer {
             ExpressionKind::Value(v) => self.visit_value(v),
             ExpressionKind::Block(b) => self.visit_block(b),
             ExpressionKind::Parenthesized { inner, .. } => self.visit_expression(inner),
+            _ => todo!(),
         }
     }
 
