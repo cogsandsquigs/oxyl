@@ -4,6 +4,7 @@
 //! FST once, and then run formatters/LSPs/the actual compiler on it, and therefore save time by
 //! only needing 1 parser.
 
+pub mod application;
 pub mod block;
 pub mod expression;
 pub mod function;

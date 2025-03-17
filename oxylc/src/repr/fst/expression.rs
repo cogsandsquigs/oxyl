@@ -110,4 +110,7 @@ pub enum OperatorKind {
 
     /// The `.`
     Dot,
+
+    /// The `::`, A.K.A "Namespaces"
+    DoubleColon,
 }

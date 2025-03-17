@@ -119,33 +119,33 @@ fn can_parse_triangle() {
     let expected = Expression::new(
         (0..11).into(),
         ExpressionKind::Infix {
-            operator: Operator::new((2..4).into(), OperatorKind::Triangle),
+            operator: Operator::new((7..9).into(), OperatorKind::Triangle),
             lhs: Box::new(Expression::new(
-                (0..1).into(),
-                ExpressionKind::Value(Value::new(
-                    (0..1).into(),
-                    ValueKind::Identifier(Identifier::new((0..1).into(), "a".into())),
-                )),
-            )),
-            rhs: Box::new(Expression::new(
-                (5..11).into(),
+                (0..6).into(),
                 ExpressionKind::Infix {
-                    operator: Operator::new((7..9).into(), OperatorKind::Triangle),
+                    operator: Operator::new((2..4).into(), OperatorKind::Triangle),
                     lhs: Box::new(Expression::new(
+                        (0..1).into(),
+                        ExpressionKind::Value(Value::new(
+                            (0..1).into(),
+                            ValueKind::Identifier(Identifier::new((0..1).into(), "a".into())),
+                        )),
+                    )),
+                    rhs: Box::new(Expression::new(
                         (5..6).into(),
                         ExpressionKind::Value(Value::new(
                             (5..6).into(),
                             ValueKind::Identifier(Identifier::new((5..6).into(), "b".into())),
                         )),
                     )),
-                    rhs: Box::new(Expression::new(
-                        (10..11).into(),
-                        ExpressionKind::Value(Value::new(
-                            (10..11).into(),
-                            ValueKind::Identifier(Identifier::new((10..11).into(), "c".into())),
-                        )),
-                    )),
                 },
+            )),
+            rhs: Box::new(Expression::new(
+                (10..11).into(),
+                ExpressionKind::Value(Value::new(
+                    (10..11).into(),
+                    ValueKind::Identifier(Identifier::new((10..11).into(), "c".into())),
+                )),
             )),
         },
     );

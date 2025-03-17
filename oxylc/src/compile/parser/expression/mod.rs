@@ -59,6 +59,12 @@ pub fn atom(state: State<&str, ParserError>) -> Result<&str, Expression, ParserE
 fn pratt(state: State<&str, ParserError>) -> Result<&str, Expression, ParserError> {
     Pratt::new(atom, cons_prefix, cons_infix, cons_postfix)
         .with_prefix_op(ww(is("-")).map(|op| Operator::new(op.span(), OperatorKind::Dash)))
+        // NOTE: We want `::` on top as it "binds tighter" than `.`, so out of an expression
+        // `a::b.c` we get `(a::b).c`.
+        .with_infix_op(
+            ww(is("::")).map(|op| Operator::new(op.span(), OperatorKind::Dot)),
+            Associativity::Right,
+        )
         // NOTE: We want `.` on top as it "binds tighter" than `|>`, so out of an expression
         // `a.b |> c` we get `(a.b) |> c`.
         .with_infix_op(
@@ -67,7 +73,7 @@ fn pratt(state: State<&str, ParserError>) -> Result<&str, Expression, ParserErro
         )
         .with_infix_op(
             ww(is("|>")).map(|op| Operator::new(op.span(), OperatorKind::Triangle)),
-            Associativity::Right,
+            Associativity::Left,
         )
         .with_infix_op(
             ww(is("*")).map(|op| Operator::new(op.span(), OperatorKind::Star)),
