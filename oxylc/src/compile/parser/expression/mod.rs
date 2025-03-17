@@ -55,9 +55,8 @@ pub fn atom(state: State<&str, ParserError>) -> Result<&str, Expression, ParserE
 }
 
 /// The pratt parser we are using.
-/// TODO: Make this not re-create pratt parser on every call?
 fn pratt(state: State<&str, ParserError>) -> Result<&str, Expression, ParserError> {
-    Pratt::new(atom, cons_prefix, cons_infix, cons_postfix)
+    Pratt::new(&atom, cons_prefix, cons_infix, cons_postfix)
         .with_prefix_op(ww(is("-")).map(|op| Operator::new(op.span(), OperatorKind::Dash)))
         // NOTE: We want `::` on top as it "binds tighter" than `.`, so out of an expression
         // `a::b.c` we get `(a::b).c`.
