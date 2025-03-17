@@ -13,7 +13,7 @@ mod value;
 
 pub mod errors;
 
-use crate::fst::File;
+use crate::repr::fst::File;
 use errgonomic::{
     combinators::many,
     parser::{errors::Error, Parser},

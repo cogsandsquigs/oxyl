@@ -1,3 +1,4 @@
+mod apply;
 mod tests;
 mod utils;
 
@@ -9,7 +10,7 @@ use super::{
 };
 use crate::{
     compile::parser::utils::ww,
-    fst::{
+    repr::fst::{
         expression::{Expression, ExpressionKind, Operator, OperatorKind},
         FstNode,
     },

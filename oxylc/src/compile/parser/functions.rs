@@ -1,5 +1,5 @@
 use super::{errors::ParserError, expression::expression, ident::ident, utils::ww};
-use crate::fst::function::Function;
+use crate::repr::fst::function::Function;
 use errgonomic::{
     combinators::{is, separated},
     parser::{errors::Result, state::State, Parser},
@@ -24,7 +24,7 @@ pub fn function(state: State<&str, ParserError>) -> Result<&str, Function, Parse
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fst::{
+    use crate::repr::fst::{
         expression::{Expression, ExpressionKind},
         identifier::Identifier,
         value::{Value, ValueKind},

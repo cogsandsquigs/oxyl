@@ -1,6 +1,6 @@
 use crate::{
     compile::parser::errors::ParserError,
-    fst::{
+    repr::fst::{
         expression::{Expression, ExpressionKind, Operator},
         FstNode,
     },

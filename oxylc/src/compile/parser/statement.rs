@@ -4,7 +4,7 @@ use super::{
     ident::ident,
     utils::{line_ending, wnnw, ww},
 };
-use crate::fst::statement::{Statement, StatementKind};
+use crate::repr::fst::statement::{Statement, StatementKind};
 use errgonomic::{
     combinators::{any, commit, is},
     parser::{errors::Result, state::State, Parser},
@@ -54,7 +54,7 @@ fn let_stmt(state: State<&str, ParserError>) -> Result<&str, Statement, ParserEr
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fst::{
+    use crate::repr::fst::{
         expression::{Expression, ExpressionKind},
         identifier::Identifier,
         value::{Value, ValueKind},

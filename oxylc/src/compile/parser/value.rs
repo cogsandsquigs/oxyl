@@ -1,5 +1,5 @@
 use super::{errors::ParserError, functions::function, ident::ident};
-use crate::fst::{
+use crate::repr::fst::{
     value::{Value, ValueKind},
     FstNode,
 };

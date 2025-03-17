@@ -1,7 +1,7 @@
 #![cfg(test)]
 
 use super::*;
-use crate::fst::{
+use crate::repr::fst::{
     block::Block,
     identifier::Identifier,
     value::{Value, ValueKind},
