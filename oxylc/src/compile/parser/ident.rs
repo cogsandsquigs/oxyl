@@ -36,7 +36,7 @@ mod tests {
         let result = ident(state);
         assert!(result.is_ok());
         let (state, ident) = result.unwrap();
-        assert_eq!(ident.name(), "abc");
+        assert_eq!(ident.name, "abc");
         assert_eq!(ident.location(), &(0..3).into());
         assert_eq!(state.as_input().as_inner(), "");
     }

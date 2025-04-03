@@ -64,10 +64,10 @@ mod tests {
         assert!(state.is_ok());
         assert_eq!(state.as_input().as_inner(), "");
         assert_eq!(expr.location(), &Span::from(0..34));
-        assert_eq!(expr.statements().len(), 1);
+        assert_eq!(expr.statements.len(), 1);
         assert_eq!(
-            expr.statements(),
-            &[Statement::new(
+            expr.statements,
+            [Statement::new(
                 (2..13).into(),
                 StatementKind::Let {
                     is_mutable: false,
@@ -80,8 +80,8 @@ mod tests {
             )]
         );
         assert_eq!(
-            expr.expression(),
-            &Expression::new(
+            *expr.expression,
+            Expression::new(
                 (28..31).into(),
                 ExpressionKind::Value(Value::new((28..31).into(), ValueKind::Integer(123))),
             )

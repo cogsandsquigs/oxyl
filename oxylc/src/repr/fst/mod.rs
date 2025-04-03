@@ -4,7 +4,6 @@
 //! FST once, and then run formatters/LSPs/the actual compiler on it, and therefore save time by
 //! only needing 1 parser.
 
-pub mod application;
 pub mod block;
 pub mod expression;
 pub mod function;
@@ -24,10 +23,10 @@ pub trait FstNode {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct File {
     /// The statements in the file.
-    statements: Vec<Statement>,
+    pub statements: Vec<Statement>,
 
     /// The location of the file.
-    location: Span,
+    pub location: Span,
 }
 
 impl File {
@@ -37,11 +36,6 @@ impl File {
             location,
             statements,
         }
-    }
-
-    /// Gets the statements in the file.
-    pub fn statements(&self) -> &[Statement] {
-        &self.statements
     }
 }
 

@@ -64,8 +64,8 @@ mod tests {
     fn can_parse_let_statement() {
         let (state, stmt) = statement.process("let abc = 123\n".into()).unwrap();
         assert_eq!(
-            stmt.kind(),
-            &StatementKind::Let {
+            stmt.kind,
+            StatementKind::Let {
                 is_mutable: false,
                 ident: Identifier::new((4..7).into(), "abc".into(),),
                 expression: Expression::new(

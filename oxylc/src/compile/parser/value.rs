@@ -98,7 +98,7 @@ mod tests {
         let (state, parsed_value) = result.unwrap();
         assert_eq!(state.as_input(), &"");
         assert!(state.is_ok());
-        assert!(matches!(parsed_value.kind(), ValueKind::Integer(123)));
+        assert!(matches!(parsed_value.kind, ValueKind::Integer(123)));
 
         // Test with whitespace after
         let input = "456 ";
@@ -109,7 +109,7 @@ mod tests {
         let (state, parsed_value) = result.unwrap();
         assert_eq!(state.as_input(), &" "); // Should consume only the digits
         assert!(state.is_ok());
-        assert!(matches!(parsed_value.kind(), ValueKind::Integer(456)));
+        assert!(matches!(parsed_value.kind, ValueKind::Integer(456)));
 
         // Test with leading zero
         let input = "0789";
@@ -120,7 +120,7 @@ mod tests {
         let (state, parsed_value) = result.unwrap();
         assert_eq!(state.as_input(), &""); // Should consume only the digits
         assert!(state.is_ok());
-        assert!(matches!(parsed_value.kind(), ValueKind::Integer(789)));
+        assert!(matches!(parsed_value.kind, ValueKind::Integer(789)));
 
         // Test with negative number (assuming decimal parser accepts them)
         let input = "-42";
@@ -129,7 +129,7 @@ mod tests {
         // This check depends on whether decimal parser accepts negative numbers
         if result.is_ok() {
             let (_, parsed_value) = result.unwrap();
-            assert!(matches!(parsed_value.kind(), ValueKind::Integer(-42)));
+            assert!(matches!(parsed_value.kind, ValueKind::Integer(-42)));
         }
 
         // Test with non-numeric input
@@ -144,13 +144,13 @@ mod tests {
         let input = "True";
         let (state, parsed) = boolean.process(input.into()).unwrap();
         assert_eq!(state.as_input(), &"");
-        assert_eq!(parsed.kind(), &ValueKind::Boolean(true));
+        assert_eq!(parsed.kind, ValueKind::Boolean(true));
         assert!(state.is_ok());
 
         let input = "False";
         let (state, parsed) = boolean.process(input.into()).unwrap();
         assert_eq!(state.as_input(), &"");
-        assert_eq!(parsed.kind(), &ValueKind::Boolean(false));
+        assert_eq!(parsed.kind, ValueKind::Boolean(false));
         assert!(state.is_ok());
     }
 
@@ -159,7 +159,7 @@ mod tests {
         let input = "123.456";
         let (state, parsed) = floating.process(input.into()).unwrap();
         assert_eq!(state.as_input(), &"");
-        assert_eq!(parsed.kind(), &ValueKind::Floating(123.456));
+        assert_eq!(parsed.kind, ValueKind::Floating(123.456));
         assert!(state.is_ok());
     }
 
@@ -173,7 +173,7 @@ mod tests {
 
         let (state, parsed_value) = result.unwrap();
         assert_eq!(state.as_input(), &"");
-        assert!(matches!(parsed_value.kind(), ValueKind::Integer(123)));
+        assert!(matches!(parsed_value.kind, ValueKind::Integer(123)));
 
         // Test value parser with non-value input
         let input = "!_abc";
@@ -189,7 +189,7 @@ mod tests {
         // If it does:
         if result.is_ok() {
             let (_, parsed_value) = result.unwrap();
-            assert!(matches!(parsed_value.kind(), ValueKind::Integer(456)));
+            assert!(matches!(parsed_value.kind, ValueKind::Integer(456)));
         }
     }
 }

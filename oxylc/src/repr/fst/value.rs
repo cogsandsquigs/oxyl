@@ -5,21 +5,16 @@ use errgonomic::parser::input::Span;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Value {
     /// The type of value it is.
-    kind: ValueKind,
+    pub kind: ValueKind,
 
     /// The location where the value was found.
-    location: Span,
+    pub location: Span,
 }
 
 impl Value {
     /// Creates a new `Value` object.
     pub fn new(location: Span, kind: ValueKind) -> Self {
         Self { kind, location }
-    }
-
-    /// Gets the kind of value it is.
-    pub fn kind(&self) -> &ValueKind {
-        &self.kind
     }
 }
 

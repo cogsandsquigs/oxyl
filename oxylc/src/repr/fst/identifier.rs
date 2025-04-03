@@ -5,21 +5,16 @@ use errgonomic::parser::input::Span;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Identifier {
     /// The name
-    name: String,
+    pub name: String,
 
     /// The location of the identifier.
-    location: Span,
+    pub location: Span,
 }
 
 impl Identifier {
     /// Creates a new `Identifier` object.
     pub fn new(location: Span, name: String) -> Self {
         Self { name, location }
-    }
-
-    /// Gets the name of the identifier.
-    pub fn name(&self) -> &str {
-        &self.name
     }
 }
 

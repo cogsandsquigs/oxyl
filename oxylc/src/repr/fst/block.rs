@@ -4,9 +4,14 @@ use errgonomic::parser::input::Span;
 /// An expression.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Block {
-    location: Span,
-    statements: Vec<Statement>,
-    expression: Box<Expression>,
+    /// The location where the value was found.
+    pub location: Span,
+
+    /// The statements in the block to be executed.
+    pub statements: Vec<Statement>,
+
+    /// The final expression in the block, that is the "return value".
+    pub expression: Box<Expression>,
 }
 
 impl Block {
@@ -17,16 +22,6 @@ impl Block {
             statements,
             expression,
         }
-    }
-
-    /// Gets the statements in the block.
-    pub fn statements(&self) -> &[Statement] {
-        &self.statements
-    }
-
-    /// Gets the expression in the block.
-    pub fn expression(&self) -> &Expression {
-        &self.expression
     }
 }
 

@@ -8,7 +8,7 @@
 
 [dependencies]
     thiserror = "^2.0.12"
-    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "138cc7f2", features = [
+    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "6a325067", features = [
         "unicode",
     ] }
 

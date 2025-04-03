@@ -5,21 +5,16 @@ use errgonomic::parser::input::Span;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Expression {
     /// The location where the value was found.
-    location: Span,
+    pub location: Span,
 
     /// The type of expression it is.
-    kind: ExpressionKind,
+    pub kind: ExpressionKind,
 }
 
 impl Expression {
     /// Creates a new `Expression` object.
     pub fn new(location: Span, kind: ExpressionKind) -> Self {
         Self { kind, location }
-    }
-
-    /// Gets the kind of value it is.
-    pub fn kind(&self) -> &ExpressionKind {
-        &self.kind
     }
 }
 
@@ -62,6 +57,17 @@ pub enum ExpressionKind {
     Postfix {
         operator: Operator,
         lhs: Box<Expression>,
+    },
+
+    /// An application of an expression onto another
+    Application {
+        /// The function being applied.
+        function: Box<Expression>,
+
+        /// The argument being applied to the function. Note that in Oxyl, functions can only take 1
+        /// argument. However, since they are left-associative *and* curryable, it is possible to
+        /// "simulate" multiple arguments by chaining applications.
+        arg: Box<Expression>,
     },
 }
 
@@ -113,4 +119,7 @@ pub enum OperatorKind {
 
     /// The `::`, A.K.A "Namespaces"
     DoubleColon,
+
+    /// A function application, A.K.A. `f a` (the whitespace)
+    Application,
 }

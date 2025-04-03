@@ -11,8 +11,8 @@ use crate::repr::fst::{
 fn can_parse_value_expression() {
     let (state, expr) = expression.process("123".into()).unwrap();
     assert_eq!(
-        expr.kind(),
-        &ExpressionKind::Value(Value::new((0..3).into(), ValueKind::Integer(123),))
+        expr.kind,
+        ExpressionKind::Value(Value::new((0..3).into(), ValueKind::Integer(123),))
     );
     assert_eq!(state.as_input().as_inner(), "");
 }
@@ -21,8 +21,8 @@ fn can_parse_value_expression() {
 fn can_parse_parenthesized_expression() {
     let (state, expr) = expression.process("(123)".into()).unwrap();
     assert_eq!(
-        expr.kind(),
-        &ExpressionKind::Parenthesized {
+        expr.kind,
+        ExpressionKind::Parenthesized {
             lparen_location: (0..1).into(),
             rparen_location: (4..5).into(),
             inner: Box::new(Expression::new(
@@ -38,8 +38,8 @@ fn can_parse_parenthesized_expression() {
 fn can_parse_whitespace_wrapped_expression() {
     let (state, expr) = expression.process("  ( 123  )   \t\n".into()).unwrap();
     assert_eq!(
-        expr.kind(),
-        &ExpressionKind::Parenthesized {
+        expr.kind,
+        ExpressionKind::Parenthesized {
             lparen_location: (2..3).into(),
             rparen_location: (9..10).into(),
             inner: Box::new(Expression::new(
@@ -55,8 +55,8 @@ fn can_parse_whitespace_wrapped_expression() {
 fn can_parse_block_expression() {
     let (state, expr) = expression.process("{ 123 }".into()).unwrap();
     assert_eq!(
-        expr.kind(),
-        &ExpressionKind::Block(Block::new(
+        expr.kind,
+        ExpressionKind::Block(Block::new(
             (0..7).into(),
             vec![],
             Box::new(Expression::new(

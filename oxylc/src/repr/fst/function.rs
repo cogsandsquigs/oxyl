@@ -3,9 +3,15 @@ use errgonomic::parser::input::Span;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Function {
-    location: Span,
-    args: Vec<Identifier>,
-    expression: Box<Expression>,
+    /// The location where the value was found.
+    pub location: Span,
+
+    /// The "arguments" to the function (even though they're not really arguments, and every
+    /// function actually takes 1 argument).
+    pub args: Vec<Identifier>,
+
+    /// The expression to evaluate within the function.
+    pub expression: Box<Expression>,
 }
 
 impl Function {
@@ -15,14 +21,6 @@ impl Function {
             args,
             expression: Box::new(expression),
         }
-    }
-
-    pub fn args(&self) -> &[Identifier] {
-        &self.args
-    }
-
-    pub fn expression(&self) -> &Expression {
-        &self.expression
     }
 }
 

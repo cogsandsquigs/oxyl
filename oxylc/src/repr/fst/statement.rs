@@ -5,21 +5,16 @@ use errgonomic::parser::input::Span;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Statement {
     /// The type of statement it is.
-    kind: StatementKind,
+    pub kind: StatementKind,
 
     /// The location where the value was found.
-    location: Span,
+    pub location: Span,
 }
 
 impl Statement {
     /// Creates a new `Expression` object.
     pub fn new(location: Span, kind: StatementKind) -> Self {
         Self { kind, location }
-    }
-
-    /// Gets the kind of value it is.
-    pub fn kind(&self) -> &StatementKind {
-        &self.kind
     }
 }
 
