@@ -1,8 +1,11 @@
 mod span;
 
+pub mod block;
 pub mod expression;
 pub mod file;
+pub mod function;
 pub mod identifier;
+pub mod statement;
 pub mod value;
 
 use std::{
@@ -27,7 +30,7 @@ pub trait NodeType: Debug + Clone + PartialEq + Eq {}
 
 impl<N: NodeType> Node<N> {
     /// Creates a new node with the given inner value and span.
-    pub fn new<S: Into<Span>>(inner: N, span: S) -> Self {
+    pub fn new<S: Into<Span>>(span: S, inner: N) -> Self {
         Node {
             inner,
             span: span.into(),

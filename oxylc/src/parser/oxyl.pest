@@ -1,26 +1,23 @@
 WHITESPACE = _{ " " | "\t" | NEWLINE }
 COMMENT = _{ "//" ~ !NEWLINE ~ NEWLINE }
 
+/// A file is a collection of statements.
+FILE = { STATEMENT* }
+
+STATEMENT = { LET_STATEMENT }
+LET_STATEMENT = { "let" ~ IDENTIFIER ~ "=" ~ EXPRESSION ~ ";" }
+
+EXPRESSION = { VALUE ~ (OPERATOR ~ VALUE)* }
+OPERATOR = @{ "+" | "-" | "*" | "/" | "=" | "==" | "!=" | "<" | "<=" | ">" | ">=" }
+VALUE = { IDENTIFIER | INTEGER | BLOCK | FUNCTION }
+
+FUNCTION = { "|" ~ (IDENTIFIER ~ ("," ~ IDENTIFIER)*)? ~ ","? ~ "|" ~ EXPRESSION }
+
+BLOCK = { "{" ~ STATEMENT* ~ EXPRESSION ~ "}" }
+
 // An identifier is a sequence of ASCII letters, digits, and underscores.
 // E.g.: `hello`, `abc123`, `hello_world`.
 IDENTIFIER = @{ LETTER ~ (LETTER | NUMBER | "_")* }
 
 // An integer is a sequence of digits.
 INTEGER = @{ NUMBER+ }
-
-OPERATOR = @{ "+" | "-" | "*" | "/" | "=" | "==" | "!=" | "<" | "<=" | ">" | ">=" }
-
-FUNCTION = { "|" ~ (IDENTIFIER ~ ("," ~ IDENTIFIER)*) ~ "|" ~ EXPRESSION }
-
-BLOCK = { "{" ~ STATEMENT* ~ EXPRESSION ~ "}" }
-
-EXPRESSION_ATOMIC = { IDENTIFIER | INTEGER | BLOCK | FUNCTION }
-
-EXPRESSION = { EXPRESSION_ATOMIC ~ (OPERATOR ~ EXPRESSION_ATOMIC)* }
-
-LET_STATEMENT = { "let" ~ IDENTIFIER ~ "=" ~ EXPRESSION ~ ";" }
-
-STATEMENT = { LET_STATEMENT }
-
-FILE = { STATEMENT* }
-
