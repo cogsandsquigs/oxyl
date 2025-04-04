@@ -12,7 +12,7 @@ OPERATOR = @{ "+" | "-" | "*" | "/" | "=" | "==" | "!=" | "<" | "<=" | ">" | ">=
 
 FUNCTION = { "|" ~ (IDENTIFIER ~ ("," ~ IDENTIFIER)*) ~ "|" ~ EXPRESSION }
 
-BLOCK = { "{" ~ EXPRESSION ~ "}" }
+BLOCK = { "{" ~ STATEMENT* ~ EXPRESSION ~ "}" }
 
 EXPRESSION_ATOMIC = { IDENTIFIER | INTEGER | BLOCK | FUNCTION }
 
@@ -20,7 +20,7 @@ EXPRESSION = { EXPRESSION_ATOMIC ~ (OPERATOR ~ EXPRESSION_ATOMIC)* }
 
 LET_STATEMENT = { "let" ~ IDENTIFIER ~ "=" ~ EXPRESSION ~ ";" }
 
-STATEMENT = { LET_STATEMENT ~ ";" }
+STATEMENT = { LET_STATEMENT }
 
 FILE = { STATEMENT* }
 

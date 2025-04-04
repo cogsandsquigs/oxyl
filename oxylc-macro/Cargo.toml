@@ -1,0 +1,16 @@
+[package]
+    name              = "oxylc-macro"
+    version           = "0.1.0"
+    authors.workspace = true
+    edition.workspace = true
+    license.workspace = true
+
+[dependencies]
+    proc-macro2 = "^1.0.94"
+    quote       = "^1.0.40"
+    syn         = { version = "^2.0.100", features = ["full"] }
+
+[lib]
+    name       = "oxylc_macro"
+    path       = "src/lib.rs"
+    proc-macro = false

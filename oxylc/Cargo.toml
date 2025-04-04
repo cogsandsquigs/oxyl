@@ -10,6 +10,7 @@
     thiserror   = "^2.0.12"
     pest        = "^2.8.0"
     pest_derive = "^2.8.0"
+    oxylc_macro = { path = "../oxylc-macro" }
 
 [lib]
     name = "oxylc"
