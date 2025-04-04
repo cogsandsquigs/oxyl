@@ -1,5 +1,6 @@
 mod span;
 
+pub mod expression;
 pub mod file;
 pub mod identifier;
 pub mod value;
