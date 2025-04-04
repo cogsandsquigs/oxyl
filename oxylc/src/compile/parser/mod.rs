@@ -1,31 +1,14 @@
-//! The parser for the Oxyl programming language. Returns a "Full" syntax tree.
-//! (includes comments and other things).
-//!
+mod errors;
 
-mod block;
-mod comments;
-mod expression;
-mod functions;
-mod ident;
-mod statement;
-mod utils;
-mod value;
+use errors::Error;
+use pest::Parser;
+use pest_derive::Parser;
 
-pub mod errors;
+#[derive(Parser)]
+#[grammar = "compile/parser/oxyl.pest"]
+struct OxylParser;
 
-use crate::repr::fst::File;
-use errgonomic::{
-    combinators::many,
-    parser::{errors::Error, Parser},
-};
-use errors::ParserError;
-use statement::statement;
-
-pub fn parse(input: &str) -> Result<File, Error<&str, ParserError>> {
-    many(statement)
-        .map_with_state(|state, stmts| {
-            let location = state.as_input().span().union_between((0..1).into());
-            (state, File::new(location, stmts))
-        })
-        .parse(input)
+pub fn parse(input: &str) -> Result<(), Error> {
+    let result = OxylParser::parse(Rule::FILE, input);
+    todo!()
 }

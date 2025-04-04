@@ -7,10 +7,9 @@
     license.workspace = true
 
 [dependencies]
-    thiserror = "^2.0.12"
-    errgonomic = { git = "https://github.com/cogsandsquigs/errgonomic.git", rev = "6a325067", features = [
-        "unicode",
-    ] }
+    thiserror   = "^2.0.12"
+    pest        = "^2.8.0"
+    pest_derive = "^2.8.0"
 
 [lib]
     name = "oxylc"
