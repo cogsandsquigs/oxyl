@@ -10,4 +10,4 @@ pub enum Value {
     Reference(Node<Identifier>),
 }
 
-impl NodeType for Identifier {}
+impl NodeType for Value {}
