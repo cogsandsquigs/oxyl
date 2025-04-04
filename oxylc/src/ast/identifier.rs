@@ -1,7 +1,7 @@
 use super::NodeType;
 
 /// An identifier in the Oxyl language.
-#[derive(Debug, Clone, PartialEq, Eq, NodeType)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Identifier {
     /// The name of the identifier.
     name: String,
@@ -9,7 +9,7 @@ pub struct Identifier {
 
 impl Identifier {
     /// Creates a new identifier from a string.
-    pub fn new(name: &str) -> Self {
+    pub fn new<S: ToString>(name: S) -> Self {
         Identifier {
             name: name.to_string(),
         }

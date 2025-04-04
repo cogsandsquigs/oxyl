@@ -1,6 +1,6 @@
 [workspace]
     resolver        = "3"
-    members         = ["oxylc", "oxylc-fuzzer", "oxylc-macro"]
+    members         = ["oxylc"]
     default-members = ["oxylc"]
 
     [workspace.package]

@@ -1,8 +1,0 @@
-// Single-line!
-let f = \x. 3
-
-/* Multi-line! */
-let g = \y. y
-
-/* Comment at the end!*/
-// ell oeh ell

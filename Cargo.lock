@@ -99,6 +99,7 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 name = "oxylc"
 version = "0.1.0"
 dependencies = [
+ "oxylc-macro",
  "pest",
  "pest_derive",
  "thiserror",
@@ -116,7 +117,6 @@ dependencies = [
 name = "oxylc-macro"
 version = "0.1.0"
 dependencies = [
- "proc-macro2",
  "quote",
  "syn",
 ]

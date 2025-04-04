@@ -1,7 +1,7 @@
 use super::{identifier::Identifier, Node, NodeType};
 
 /// A raw value in the Oxyl language
-#[derive(Debug, Clone, PartialEq, Eq, NodeType)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Value {
     /// An integer value.
     Integer(i64),
@@ -10,4 +10,4 @@ pub enum Value {
     Reference(Node<Identifier>),
 }
 
-impl NodeType for Value {}
+impl NodeType for Identifier {}
