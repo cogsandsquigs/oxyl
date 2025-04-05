@@ -1,23 +1,22 @@
 WHITESPACE = _{ " " | "\t" | NEWLINE }
 COMMENT = _{ "//" ~ !NEWLINE ~ NEWLINE }
 
-/// A file is a collection of statements.
-FILE = { STATEMENT* }
+FILE = { SOI ~ STATEMENT* ~ EOI }
 
 STATEMENT = { LET_STATEMENT }
 LET_STATEMENT = { "let" ~ IDENTIFIER ~ "=" ~ EXPRESSION ~ ";" }
 
-EXPRESSION = { VALUE ~ (OPERATOR ~ VALUE)* }
-OPERATOR = @{ "+" | "-" | "*" | "/" | "=" | "==" | "!=" | "<" | "<=" | ">" | ">=" }
+// expr       =   { prefix? ~ primary ~ postfix? ~ (infix ~ prefix? ~ primary ~ postfix? )* }
+EXPRESSION = { VALUE ~ (INFIX_OPERATOR ~ VALUE)* }
+    INFIX_OPERATOR = _{ ADD | SUB | MUL | DIV }
+        ADD = { "+" }
+        SUB = { "-" }
+        MUL = { "*" }
+        DIV = { "/" }
+
 VALUE = { IDENTIFIER | INTEGER | BLOCK | FUNCTION }
-
+APPLICATION = { EXPRESSION ~ EXPRESSION+ }
 FUNCTION = { "|" ~ (IDENTIFIER ~ ("," ~ IDENTIFIER)*)? ~ ","? ~ "|" ~ EXPRESSION }
-
 BLOCK = { "{" ~ STATEMENT* ~ EXPRESSION ~ "}" }
-
-// An identifier is a sequence of ASCII letters, digits, and underscores.
-// E.g.: `hello`, `abc123`, `hello_world`.
 IDENTIFIER = @{ LETTER ~ (LETTER | NUMBER | "_")* }
-
-// An integer is a sequence of digits.
 INTEGER = @{ NUMBER+ }

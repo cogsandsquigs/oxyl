@@ -9,14 +9,22 @@ use pest::iterators::Pair;
 
 /// Parses a file rule.
 pub fn file(pair: Pair<'_, Rule>) -> Node<File> {
+    // NOTE: SOI rule does not produce a token, so no need to check for it.
+
     let span: Span = (&pair).into();
-    let stmts = pair
-        .into_inner()
-        .map(|p| {
-            let value = p.into_inner().next().unwrap();
-            statement(value)
-        })
-        .collect::<Vec<_>>();
+    let mut pairs = pair.into_inner();
+
+    println!("Parsing: {:?}", pairs);
+
+    let mut stmts = vec![];
+
+    for pair in pairs.by_ref() {
+        if pair.as_rule() == Rule::EOI {
+            break;
+        }
+
+        stmts.push(statement(pair));
+    }
 
     Node::new(span, File::new(stmts))
 }
